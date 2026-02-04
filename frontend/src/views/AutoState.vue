@@ -303,7 +303,6 @@ const isGroup5Disabled = computed(() => {
     <!-- 下一阶段 -->
     <button 
       class="auto-button"
-      :class="{ active: group7 === '计时器' }"
       :style="{ backgroundColor: COLORS.ORANGE, ...getButtonPosition('自动结束') }"
       :disabled="timer.getTime() < 20.0 * 1000"
       @click="emit('autoEnd')"

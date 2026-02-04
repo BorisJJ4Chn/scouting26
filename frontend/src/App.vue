@@ -1,10 +1,12 @@
 <script setup>
 import { ref, computed, onMounted, provide } from 'vue'
-import Init from './components/Init.vue'
-import PreMatch from './components/PreMatch.vue'
-import BeforeStart from './components/BeforeStart.vue'
-import AutoState from './components/AutoState.vue'
-import { ALLIANCE } from './constants'
+import Init from './views/Init.vue'
+import PreMatch from './views/PreMatch.vue'
+import BeforeStart from './views/BeforeStart.vue'
+import AutoState from './views/AutoState.vue'
+import OptionButton from './components/OptionButton.vue'
+import CountButton from './components/CountButton.vue'
+import { COLORS, ALLIANCE } from './constants'
 
 // 状态机状态定义
 const STATES = {
@@ -113,7 +115,17 @@ onMounted(() => {
       height: containerSize.height + 'px'
     }"
   >
-    <template v-if="currentState === STATES.INIT">
+  <div>
+    <CountButton name="count1" :style="{ backgroundColor: COLORS.RED, top: '10%', left: '10%', width: '20%', height: '20%' }" />
+    <CountButton name="count2" :style="{ backgroundColor: COLORS.RED, top: '10%', left: '30%', width: '20%', height: '20%' }" />
+    <CountButton name="count3" :style="{ backgroundColor: COLORS.RED, top: '10%', left: '50%', width: '20%', height: '20%' }" />
+  </div>
+  <div>
+    <OptionButton name="option1" groupName="test" :maxSelections="2" :style="{ backgroundColor: COLORS.RED, top: '50%', left: '10%', width: '20%', height: '20%' }" />
+    <OptionButton name="option2" groupName="test" :style="{ backgroundColor: COLORS.RED, top: '50%', left: '30%', width: '20%', height: '20%' }" />
+    <OptionButton name="option3" groupName="test" :style="{ backgroundColor: COLORS.RED, top: '50%', left: '50%', width: '20%', height: '20%' }" />
+  </div>
+    <!-- <template v-if="currentState === STATES.INIT">
       <div class="init-section">
         <Init @confirm="handleConfirm" @allianceChange="handleAllianceChange" />
       </div>
@@ -132,7 +144,7 @@ onMounted(() => {
       <div class="buttons-section">
         <AutoState :alliance="alliance" @autoEnd="handleAutoEnd" />
       </div>
-    </template>
+    </template> -->
   </div>
 </template>
 
