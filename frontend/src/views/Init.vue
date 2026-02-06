@@ -6,6 +6,8 @@ const emit = defineEmits(['confirm', 'allianceChange'])
 
 const teamNumber = ref('')
 const alliance = ref('')
+const matchType = ref('')
+const matchNumber = ref('')
 
 watch(alliance, (newValue) => {
   emit('allianceChange', newValue)
@@ -14,7 +16,9 @@ watch(alliance, (newValue) => {
 const handleConfirm = () => {
   emit('confirm', {
     teamNumber: teamNumber.value,
-    alliance: alliance.value
+    alliance: alliance.value,
+    matchType: matchType.value,
+    matchNumber: matchNumber.value
   })
 }
 </script>
@@ -51,7 +55,39 @@ const handleConfirm = () => {
         <span class="alliance-label" :style="{ backgroundColor: COLORS.BLUE }"></span>
       </label>
     </div>
-    <button class="confirm-button" @click="handleConfirm" :disabled="!teamNumber || !alliance">确认</button>
+    <div class="match-selector">
+      <div class="match-type-selector">
+        <label class="match-type-option">
+          <input 
+            type="radio" 
+            name="matchType" 
+            value="资格赛" 
+            v-model="matchType"
+            class="match-type-radio"
+          />
+          <span class="match-type-label">资格赛</span>
+        </label>
+        <label class="match-type-option">
+          <input 
+            type="radio" 
+            name="matchType" 
+            value="淘汰赛" 
+            v-model="matchType"
+            class="match-type-radio"
+          />
+          <span class="match-type-label">淘汰赛</span>
+        </label>
+      </div>
+      <div class="match-number-input">
+        <input 
+          type="number" 
+          v-model="matchNumber" 
+          class="match-number-field"
+          placeholder="场次号"
+        />
+      </div>
+    </div>
+    <button class="confirm-button" @click="handleConfirm" :disabled="!teamNumber || !alliance || !matchType || !matchNumber">确认</button>
   </div>
 </template>
 
@@ -167,5 +203,70 @@ const handleConfirm = () => {
 .confirm-button:disabled:hover {
   background-color: #ccc;
   transform: none;
+}
+
+/* 场次选择器样式 */
+.match-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vw;
+  width: 100%;
+  align-items: center;
+}
+
+.match-type-selector {
+  display: flex;
+  gap: 2vw;
+  align-items: center;
+}
+
+.match-type-option {
+  position: relative;
+  cursor: pointer;
+}
+
+.match-type-radio {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.match-type-label {
+  display: block;
+  padding: 1vw 2vw;
+  border: 0.2vw solid #333;
+  border-radius: 0.5vw;
+  background-color: #fff;
+  color: #333;
+  font-size: 1.5vw;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.match-type-radio:checked + .match-type-label {
+  background-color: #333;
+  color: #fff;
+  box-shadow: 0 0 0 0.2vw rgba(0, 0, 0, 0.3);
+}
+
+.match-number-input {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.match-number-field {
+  width: 60%;
+  padding: 1.5vw;
+  font-size: 1.5vw;
+  border: 0.3vw solid #333;
+  border-radius: 0.5vw;
+  text-align: center;
+}
+
+.match-number-field:focus {
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 0.2vw rgba(100, 108, 255, 0.3);
 }
 </style>

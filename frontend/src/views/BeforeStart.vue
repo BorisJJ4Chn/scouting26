@@ -46,7 +46,7 @@ const handleStartClick = () => {
 .start-button {
   width: 100%;
   height: 100%;
-  font-size: 5vw;
+  font-size: 4vw;
   border: none;
   color: white;
   cursor: pointer;

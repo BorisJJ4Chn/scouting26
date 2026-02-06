@@ -34,6 +34,7 @@ const startTimer = () => {
 
 // 获取当前时间（毫秒）
 const getCurrentTime = () => {
+  return 22000;
   if (!startTime.value) return 0
   return Date.now() - startTime.value
 }
@@ -116,24 +117,16 @@ onMounted(() => {
     }"
   >
     <template v-if="currentState === STATES.INIT">
-      <div class="init-section">
-        <Init @confirm="handleConfirm" @allianceChange="handleAllianceChange" />
-      </div>
+      <Init @confirm="handleConfirm" @allianceChange="handleAllianceChange" />
     </template>
     <template v-else-if="currentState === STATES.PREMATCH">
-      <div class="buttons-section">
-        <PreMatch :alliance="alliance" @confirm="handlePreMatchConfirm" />
-      </div>
+      <PreMatch :alliance="alliance" @confirm="handlePreMatchConfirm" />
     </template>
     <template v-else-if="currentState === STATES.BEFORE_START">
-      <div class="buttons-section">
-        <BeforeStart :alliance="alliance" @start="handleStart" />
-      </div>
+      <BeforeStart :alliance="alliance" @start="handleStart" />
     </template>
     <template v-else-if="currentState === STATES.AUTO">
-      <div class="buttons-section">
-        <AutoState :alliance="alliance" @autoEnd="handleAutoEnd" />
-      </div>
+      <AutoState :alliance="alliance" @autoEnd="handleAutoEnd" />
     </template>
   </div>
 </template>
@@ -146,21 +139,32 @@ onMounted(() => {
   background-repeat: no-repeat;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   position: relative;
   overflow: hidden;
-  margin: 0;
-  left: 0;
+  margin: 0 auto;
+  left: auto;
   border: 1px solid #fff;
 }
+</style>
 
-.init-section,
-.buttons-section {
-  width: 100%;
-  height: 100%;
+<style>
+/* 全局样式 */
+body {
+  margin: 0;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
+  min-height: 100vh;
+  background-color: #000;
+}
+
+/* 确保容器在父元素中居中 */
+#app {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
