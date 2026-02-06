@@ -39,7 +39,11 @@ const handleClick = () => {
   
   // 点击后失去焦点
   if (buttonRef.value) {
-    buttonRef.value.blur()
+    setTimeout(() => {
+      if (buttonRef.value) {
+        buttonRef.value.blur()
+      }
+    }, 100)
   }
 }
 </script>

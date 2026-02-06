@@ -1,6 +1,6 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import { useOptionButtonGroup } from './useOptionButtonGroup'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { useOptionButtonManager } from './OptionButtonGroupManager'
 
 // 按钮引用
 const buttonRef = ref(null)
@@ -17,10 +17,9 @@ const props = defineProps({
     type: String,
     required: true
   },
-  // 最大选择项数（-1表示任意）
-  maxSelections: {
-    type: Number,
-    default: null
+  canDeselect: {
+    type: Boolean,
+    default: false
   },
   // 按钮样式（背景颜色、位置、大小）
   style: {
@@ -33,59 +32,57 @@ const props = defineProps({
 const emit = defineEmits(['select', 'deselect'])
 
 // 获取全局选项按钮组实例
-const optionButtonGroup = useOptionButtonGroup()
+const optionButtonGroupManager = useOptionButtonManager()
 
-// 按钮选中状态
-const isSelected = ref(false)
+// 计算属性，用于响应式更新选中状态
+const isSelected = computed(() => {
+  return optionButtonGroupManager.getGroup(props.groupName).getIfSelected(props.name)
+})
 
 // 按钮点击事件处理
 const handleClick = () => {
   if (isSelected.value) {
+
+    if (!props.canDeselect) {
+      return
+    }
+
     // 取消选择
-    const success = optionButtonGroup.deselectOption(props.groupName, props.name)
+    const success = optionButtonGroupManager.deselectOption(props.groupName, props.name)
     if (success) {
-      isSelected.value = false
       emit('deselect', props.name)
     }
   } else {
     // 选择
-    const success = optionButtonGroup.selectOption(props.groupName, props.name)
+    const success = optionButtonGroupManager.selectOption(props.groupName, props.name)
     if (success) {
-      isSelected.value = true
       emit('select', props.name)
     }
   }
   
   // 点击后失去焦点
   if (buttonRef.value) {
-    buttonRef.value.blur()
+    setTimeout(() => {
+      if (buttonRef.value) {
+        buttonRef.value.blur()
+      }
+    }, 100)
   }
-}
-
-// 获取当前分组中选中的选项
-const getSelectedOptions = () => {
-  return optionButtonGroup.getSelectedOptions(props.groupName)
 }
 
 // 暴露方法给父组件
 defineExpose({
-  getSelectedOptions,
-  isSelected: () => isSelected.value
+  isSelected: () => selected.value
 })
 
 // 组件挂载时初始化
-onMounted(() => {
-  // 设置分组最大选择项数
-  if (props.maxSelections !== null) {
-    optionButtonGroup.setMaxSelections(props.groupName, props.maxSelections)
-  }
-})
+onMounted(() => {})
 
 // 组件卸载时清理
 onUnmounted(() => {
   // 如果按钮被选中，从分组中移除
   if (isSelected.value) {
-    optionButtonGroup.deselectOption(props.groupName, props.name)
+    optionButtonGroupManager.deselectOption(props.groupName, props.name)
   }
 })
 </script>
@@ -94,7 +91,7 @@ onUnmounted(() => {
   <button
     ref="buttonRef"
     class="option-button"
-    :class="{ 'selected': isSelected }"
+    :class="{ active: isSelected }"
     :style="style"
     @click="handleClick"
   >
@@ -108,7 +105,7 @@ onUnmounted(() => {
   border: none;
   border-radius: 1vw;
   cursor: pointer;
-  font-size: 1.5vw;
+  font-size: 1.2vw;
   font-weight: bold;
   display: flex;
   justify-content: center;
@@ -122,7 +119,7 @@ onUnmounted(() => {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.option-button.selected {
+.option-button.active {
   border: 2px solid #fff;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }

@@ -115,17 +115,7 @@ onMounted(() => {
       height: containerSize.height + 'px'
     }"
   >
-  <div>
-    <CountButton name="count1" :style="{ backgroundColor: COLORS.RED, top: '10%', left: '10%', width: '20%', height: '20%' }" />
-    <CountButton name="count2" :style="{ backgroundColor: COLORS.RED, top: '10%', left: '30%', width: '20%', height: '20%' }" />
-    <CountButton name="count3" :style="{ backgroundColor: COLORS.RED, top: '10%', left: '50%', width: '20%', height: '20%' }" />
-  </div>
-  <div>
-    <OptionButton name="option1" groupName="test" :maxSelections="2" :style="{ backgroundColor: COLORS.RED, top: '50%', left: '10%', width: '20%', height: '20%' }" />
-    <OptionButton name="option2" groupName="test" :style="{ backgroundColor: COLORS.RED, top: '50%', left: '30%', width: '20%', height: '20%' }" />
-    <OptionButton name="option3" groupName="test" :style="{ backgroundColor: COLORS.RED, top: '50%', left: '50%', width: '20%', height: '20%' }" />
-  </div>
-    <!-- <template v-if="currentState === STATES.INIT">
+    <template v-if="currentState === STATES.INIT">
       <div class="init-section">
         <Init @confirm="handleConfirm" @allianceChange="handleAllianceChange" />
       </div>
@@ -144,7 +134,7 @@ onMounted(() => {
       <div class="buttons-section">
         <AutoState :alliance="alliance" @autoEnd="handleAutoEnd" />
       </div>
-    </template> -->
+    </template>
   </div>
 </template>
 

@@ -1,0 +1,24 @@
+{
+  "name": "FRC Scouting App",
+  "short_name": "Scouting App",
+  "description": "FRC机器人比赛侦察应用",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "orientation": "portrait",
+  "categories": [
+    "productivity",
+    "utilities"
+  ],
+  "screenshots": [],
+  "shortcuts": []
+}

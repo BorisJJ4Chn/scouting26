@@ -1,7 +1,10 @@
 <script setup>
-import { ref, computed, inject, onMounted, onUnmounted } from 'vue'
+import { ref, reactive, computed, inject, onMounted, onUnmounted } from 'vue'
 import { COLORS, ALLIANCE } from '../constants'
 import { positions } from './AutoStateConfig'
+import OptionButton from '../components/OptionButton.vue'
+import CountButton from '../components/CountButton.vue'
+import { useOptionButtonManager } from '../components/OptionButtonGroupManager.js'
 
 // 注入全局计时器功能
 const timer = inject('timer')
@@ -52,75 +55,76 @@ const getButtonPosition = (buttonName) => {
   return positions[props.alliance][buttonName] || { top: '0%', left: '0%' }
 }
 
+const optionButtonManager = useOptionButtonManager()
+
+// 删除旧分组
+optionButtonManager.deleteGroupIfExist('group1')
+optionButtonManager.deleteGroupIfExist('group2')
+optionButtonManager.deleteGroupIfExist('group5')
+optionButtonManager.deleteGroupIfExist('group7')
+
 // 第一组：4个互斥按钮（爬升位置）
-const group1 = ref('')
+const group1 = optionButtonManager.createGroup('group1', 1)
 
 // 第二组：2个互斥按钮（爬升结果）
-const group2 = ref('')
+const group2 = optionButtonManager.createGroup('group2', 1)
 
-// 第三组：3个互斥按钮（吸球位置）
-const group3 = ref('')
+// 第三组：3个计次按钮（吸球位置）
 
-// 第四组：2组互斥按钮（回程位置）
-const group4 = ref('')
+// 第四.1组：2个计次按钮（出程位置）
 
-// 第五组：2个互斥按钮（中场方向）
-const group5 = ref('')
+// 第四.2组：2个计次按钮（回程位置）
 
-// 第六组：单个按钮
-const group6 = ref(false)
+// 第五组：3个计次按钮（中场方向）
+const group5 = optionButtonManager.createGroup('group5', 1)
 
-// 处理第一组按钮点击
-const handleGroup1Click = (value) => {
-  group1.value = value
-  if (value === '未爬') {
-    group2.value = ''
+// 第六组：单个按钮（撞车）
+
+// 第七组：2个互斥按钮（PreLoad）
+const group7 = optionButtonManager.createGroup('group7', 1)
+
+// 第八组：4个计次按钮（吸球后射球）
+
+
+
+const preLoadEnded = computed(() => {
+  return group7.selected()
+})
+
+const isInState = ref(true)
+
+const stateForGroup5 = reactive({
+  fromMid: null,
+  outCount: 0,
+})
+const needChooseGroup5 = computed(() => {
+  return stateForGroup5.fromMid !== null && stateForGroup5.outCount === 1
+})
+
+const handleInOut = (op) => {
+  isInState.value = op === 'back'
+  if (op === 'out') {
+    stateForGroup5.outCount++
   }
 }
 
-// 处理第二组按钮点击
-const handleGroup2Click = (value) => {
-  group2.value = value
+const hasBall = ref(false)
+const handleGetBall = () => {
+  hasBall.value = true
+}
+const handleMid = () => {
+  stateForGroup5.fromMid = true
+}
+const handleReleaseBall = () => {
+  hasBall.value = false
 }
 
-// 处理第三组按钮点击
-const handleGroup3Click = (value) => {
-  group3.value = value
-  if (value !== '首吸中场') {
-    group4.value = ''
-    group5.value = ''
-  }
+const climbStarted = ref(false)
+const handleClimbStart = () => {
+  climbStarted.value = true
 }
 
-// 处理第四组按钮点击
-const handleGroup4Click = (value) => {
-  group4.value = value
-}
 
-// 处理第五组按钮点击
-const handleGroup5Click = (value) => {
-  group5.value = value
-}
-
-// 处理第六组按钮点击
-const handleGroup6Click = () => {
-  group6.value = !group6.value
-}
-
-// 检查第二组按钮是否应该被禁用
-const isGroup2Disabled = computed(() => {
-  return group1.value === '未爬'
-})
-
-// 检查第四组按钮是否应该被禁用
-const isGroup4Disabled = computed(() => {
-  return group3.value !== '首吸中场'
-})
-
-// 检查第五组按钮是否应该被禁用
-const isGroup5Disabled = computed(() => {
-  return group3.value !== '首吸中场'
-})
 </script>
 
 <template>
@@ -133,177 +137,195 @@ const isGroup5Disabled = computed(() => {
       {{ displayTime.toFixed(2) }} s
     </div>
     <!-- 第一组 -->
-    <button 
+    <CountButton 
       class="auto-button"
-      :class="{ active: group1 === '未爬' }"
-      :style="{ backgroundColor: COLORS.RED, ...getButtonPosition('未爬') }"
-      @click="handleGroup1Click('未爬')"
-    >
-      未爬
-    </button>
-    <button 
+      name="爬升开始"
+      groupName="group1"
+      :style="{ backgroundColor: COLORS.RED, ...getButtonPosition('爬升开始') }"
+      :disabled="!(preLoadEnded && isInState && !climbStarted)"
+      @click="handleClimbStart"
+    />
+    <OptionButton 
       class="auto-button"
-      :class="{ active: group1 === '左爬' }"
+      name="左爬"
+      groupName="group1"
       :style="{ backgroundColor: COLORS.RED, ...getButtonPosition('左爬') }"
-      @click="handleGroup1Click('左爬')"
-    >
-      左爬
-    </button>
-    <button 
+      :disabled="!(preLoadEnded && isInState && climbStarted)"
+    />
+    <OptionButton 
       class="auto-button"
-      :class="{ active: group1 === '中爬' }"
+      name="中爬"
+      groupName="group1"
       :style="{ backgroundColor: COLORS.RED, ...getButtonPosition('中爬') }"
-      @click="handleGroup1Click('中爬')"
-    >
-      中爬
-    </button>
-    <button 
+      :disabled="!(preLoadEnded && isInState && climbStarted)"
+    />
+    <OptionButton 
       class="auto-button"
-      :class="{ active: group1 === '右爬' }"
+      name="右爬"
+      groupName="group1"
       :style="{ backgroundColor: COLORS.RED, ...getButtonPosition('右爬') }"
-      @click="handleGroup1Click('右爬')"
-    >
-      右爬
-    </button>
+      :disabled="!(preLoadEnded && isInState && climbStarted)"
+    />
 
     <!-- 第二组 -->
-    <!-- 前提：第一组结果非“未爬” -->
-    <button 
+    <OptionButton 
       class="auto-button"
-      :class="{ active: group2 === '成功' }"
+      name="成功"
+      groupName="group2"
       :style="{ backgroundColor: COLORS.GREEN, ...getButtonPosition('成功') }"
-      :disabled="isGroup2Disabled"
-      @click="handleGroup2Click('成功')"
-    >
-      成功
-    </button>
-    <button 
+      :disabled="!(preLoadEnded && isInState && climbStarted && group1.selected())"
+    />
+    <OptionButton 
       class="auto-button"
-      :class="{ active: group2 === '失败' }"
+      name="失败"
+      groupName="group2"
       :style="{ backgroundColor: COLORS.GREEN, ...getButtonPosition('失败') }"
-      :disabled="isGroup2Disabled"
-      @click="handleGroup2Click('失败')"
-    >
-      失败
-    </button>
+      :disabled="!(preLoadEnded && isInState && climbStarted && group1.selected())"
+    />
 
     <!-- 第三组 -->
-    <button 
+    <CountButton 
       class="auto-button"
-      :class="{ active: group3 === '首吸中场' }"
-      :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('首吸中场') }"
-      @click="handleGroup3Click('首吸中场')"
-    >
-      首吸中场
-    </button>
-    <button 
+      name="吸中场"
+      :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('吸中场') }"
+      :disabled="!(preLoadEnded && !isInState && !hasBall)"
+      @click="handleGetBall(), handleMid()"
+    />
+    <CountButton 
       class="auto-button"
-      :class="{ active: group3 === '首吸DEPOT' }"
-      :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('首吸DEPOT') }"
-      @click="handleGroup3Click('首吸DEPOT')"
-    >
-      首吸DEPOT
-    </button>
-    <button 
+      name="吸DEPOT"
+      :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('吸DEPOT') }"
+      :disabled="!(preLoadEnded && isInState && !hasBall)"
+      @click="handleGetBall"
+    />
+    <CountButton 
       class="auto-button"
-      :class="{ active: group3 === '首吸OUTPOST' }"
-      :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('首吸OUTPOST') }"
-      @click="handleGroup3Click('首吸OUTPOST')"
-    >
-      首吸OUTPOST
-    </button>
-    <button 
-      class="auto-button"
-      :class="{ active: group3 === '无首吸' }"
-      :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('无首吸') }"
-      @click="handleGroup3Click('无首吸')"
-    >
-      无首吸
-    </button>
+      name="吸OUTPOST"
+      :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('吸OUTPOST') }"
+      :disabled="!(preLoadEnded && isInState && !hasBall)"
+      @click="handleGetBall"
+    />
 
     <!-- 第四组 -->
-    <!-- 前提：第三组结果为“首吸中场” -->
-    <button 
+    <CountButton 
       class="auto-button"
-      :class="{ active: group4 === '回程：洞' }"
-      :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('回程：洞上') }"
-      :disabled="isGroup4Disabled"
-      @click="handleGroup4Click('回程：洞')"
-    >
-      回程：洞
-    </button>
-    <button 
+      name="出程：洞"
+      :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('出程：洞') }"
+      @click="handleInOut('out')"
+      :disabled="!(preLoadEnded && isInState)"
+    />
+    <CountButton 
       class="auto-button"
-      :class="{ active: group4 === '回程：洞' }"
-      :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('回程：洞下') }"
-      :disabled="isGroup4Disabled"
-      @click="handleGroup4Click('回程：洞')"
-    >
-      回程：洞
-    </button>
-    <button 
+      name="回程：洞"
+      :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('回程：洞') }"
+      @click="handleInOut('back')"
+      :disabled="!(preLoadEnded && !isInState)"
+    />
+    <CountButton 
       class="auto-button"
-      :class="{ active: group4 === '回程：坡' }"
-      :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('回程：坡上') }"
-      :disabled="isGroup4Disabled"
-      @click="handleGroup4Click('回程：坡')"
-    >
-      回程：坡
-    </button>
-    <button 
+      name="出程：坡"
+      :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('出程：坡') }"
+      @click="handleInOut('out')"
+      :disabled="!(preLoadEnded && isInState)"
+    />
+    <CountButton 
       class="auto-button"
-      :class="{ active: group4 === '回程：坡' }"
-      :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('回程：坡下') }"
-      :disabled="isGroup4Disabled"
-      @click="handleGroup4Click('回程：坡')"
-    >
-      回程：坡
-    </button>
+      name="回程：坡"
+      :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('回程：坡') }"
+      @click="handleInOut('back')"
+      :disabled="!(preLoadEnded && !isInState)"
+    />
 
     <!-- 第五组 -->
-    <!-- 前提：第三组结果为“首吸中场” -->
-    <button 
+    <OptionButton 
       class="auto-button"
-      :class="{ active: group5 === '中切' }"
+      name="中切"
+      groupName="group5"
       :style="{ backgroundColor: COLORS.YELLOW, ...getButtonPosition('中切') }"
-      :disabled="isGroup5Disabled"
-      @click="handleGroup5Click('中切')"
-    >
-      中切
-    </button>
-    <button 
+      :disabled="!(preLoadEnded && !isInState && needChooseGroup5)"
+    />
+    <OptionButton 
       class="auto-button"
-      :class="{ active: group5 === '球阵角' }"
+      name="球阵角"
+      groupName="group5"
       :style="{ backgroundColor: COLORS.YELLOW, ...getButtonPosition('球阵角') }"
-      :disabled="isGroup5Disabled"
-      @click="handleGroup5Click('球阵角')"
-    >
-      球阵角
-    </button>
-    <button 
+      :disabled="!(preLoadEnded && !isInState && needChooseGroup5)"
+    />
+    <OptionButton 
       class="auto-button"
-      :class="{ active: group5 === '边切' }"
+      name="边切"
+      groupName="group5"
       :style="{ backgroundColor: COLORS.YELLOW, ...getButtonPosition('边切') }"
-      :disabled="isGroup5Disabled"
-      @click="handleGroup5Click('边切')"
-    >
-      边切
-    </button>
+      :disabled="!(preLoadEnded && !isInState && needChooseGroup5)"
+    />
 
     <!-- 第六组 -->
-    <button 
+    <CountButton 
       class="auto-button"
-      :class="{ active: group6 }"
-      :style="{ backgroundColor: COLORS.PURPLE, ...getButtonPosition('撞车') }"
-      @click="handleGroup6Click()"
-    >
-      撞车
-    </button>
+      name="撞车"
+      :style="{ backgroundColor: COLORS.VIOLET, ...getButtonPosition('撞车') }"
+      :disabled="!(!isInState && preLoadEnded)"
+    />
+
+    <!-- 第七组 -->
+    <OptionButton 
+      class="auto-button"
+      name="PreLoad没射"
+      groupName="group7"
+      :style="{ backgroundColor: COLORS.AMBER, ...getButtonPosition('PreLoad没射') }"
+    />
+
+    <OptionButton 
+      class="auto-button"
+      name="PreLoad射丢"
+      groupName="group7"
+      :style="{ backgroundColor: COLORS.AMBER, ...getButtonPosition('PreLoad射丢') }"
+    />
+
+    <OptionButton 
+      class="auto-button"
+      name="PreLoad全进"
+      groupName="group7"
+      :style="{ backgroundColor: COLORS.AMBER, ...getButtonPosition('PreLoad全进') }"
+    />
+
+    <!-- 第八组 -->
+    <CountButton 
+      class="auto-button"
+      name="hub下"
+      :style="{ backgroundColor: COLORS.LIME, ...getButtonPosition('hub下') }"
+      :disabled="!(preLoadEnded && isInState && hasBall)"
+      @click="handleReleaseBall"
+    />
+
+    <CountButton 
+      class="auto-button"
+      name="线后"
+      :style="{ backgroundColor: COLORS.LIME, ...getButtonPosition('线后') }"
+      :disabled="!(preLoadEnded && isInState && hasBall)"
+      @click="handleReleaseBall"
+    />
+
+    <CountButton 
+      class="auto-button"
+      name="靠塔"
+      :style="{ backgroundColor: COLORS.LIME, ...getButtonPosition('靠塔') }"
+      :disabled="!(preLoadEnded && isInState && hasBall)"
+      @click="handleReleaseBall"
+    />
+
+    <CountButton 
+      class="auto-button"
+      name="任意"
+      :style="{ backgroundColor: COLORS.LIME, ...getButtonPosition('任意') }"
+      :disabled="!(preLoadEnded && isInState && hasBall)"
+      @click="handleReleaseBall"
+    />
 
     <!-- 下一阶段 -->
     <button 
       class="auto-button"
-      :style="{ backgroundColor: COLORS.ORANGE, ...getButtonPosition('自动结束') }"
+      :style="{ backgroundColor: COLORS.BLACK, ...getButtonPosition('自动结束') }"
       :disabled="timer.getTime() < 20.0 * 1000"
       @click="emit('autoEnd')"
     >
@@ -362,7 +384,7 @@ const isGroup5Disabled = computed(() => {
 }
 
 .auto-button:disabled {
-  opacity: 0.5;
+  opacity: 0.2;
   cursor: not-allowed;
 }
 </style>
