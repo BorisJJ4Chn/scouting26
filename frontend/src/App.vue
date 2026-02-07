@@ -8,6 +8,8 @@ import MainButtons from './views/MainButtons.vue'
 import TimerAndState from './views/TimerAndState.vue'
 import ActiveStateButtons from './views/ActiveStateButtons.vue'
 import ClimbUpButtons from './views/ClimbUpButtons.vue'
+import CounterBar from './components/CounterBar.vue'
+import TeleopStateCounters from './views/TeleopStateCounters.vue'
 import { ALLIANCE, STATES } from './constants.js'
 import { useRobotStateStore } from './store/RobotState.js'
 import AskTransition from './views/AskTransition.vue'
@@ -133,6 +135,15 @@ onMounted(() => {
     ">
       <ActiveStateButtons />
     </template>
+
+    <template v-if="
+      store.currentState === STATES.TRANSITION
+        || store.currentState === STATES.ACTIVE
+        || store.currentState === STATES.INACTIVE
+        || store.currentState === STATES.ENDGAME
+    ">
+      <TeleopStateCounters />
+    </template>
   </div>
 </template>
 
@@ -190,13 +201,13 @@ body {
   word-wrap: break-word;
 }
 
-.m-global-button:hover:not(:disabled, .active) {
+.m-global-button:hover:not(:disabled, .disabled, .active) {
   transform: scale(1.05);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   opacity: 0.9;
 }
 
-.m-global-button:active:not(:disabled) {
+.m-global-button:active:not(:disabled, .disabled) {
   border: 2px solid #fff;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
   transform: scale(0.95);
@@ -207,6 +218,11 @@ body {
 }
 
 .m-global-button:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+.m-global-button.disabled {
   opacity: 0.2;
   cursor: not-allowed;
 }

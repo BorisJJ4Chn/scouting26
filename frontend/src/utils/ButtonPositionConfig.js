@@ -43,7 +43,8 @@ export const positions = {
         '线后': { top: '75%', bottom: '19%', left: '38%', right: '52%' },
         '靠塔': { top: '50%', bottom: '44%', left: '27%', right: '63%' },
         '任意': { top: '15%', bottom: '79%', left: '29%', right: '61%' },
-        '射球准确率': { top: '32%', bottom: '64%', left: '29%', right: '61%' },
+        '准确率': { top: '2%', bottom: '94%', left: '40%', right: '52%' },
+        '滑动条': { top: '1%', bottom: '92%', left: '16%', right: '61%' },
 
         '当前状态': { top: '2%', bottom: '92%', left: '3%', right: '87%' },
         '计时器': { top: '10%', bottom: '84%', left: '3%', right: '87%' },
@@ -59,7 +60,16 @@ export const positions = {
         'Hub': { top: '42%', bottom: '43%', left: '42%', right: '52%' },
         '右坡': { top: '60%', bottom: '25%', left: '42%', right: '52%' },
         '右洞': { top: '80%', bottom: '5%', left: '42%', right: '52%' },
-        'confirm': { top: '80%', bottom: '10%', left: '80%', right: '10%' }
+        'confirm': { top: '80%', bottom: '10%', left: '80%', right: '10%' },
+
+        '推球回家次数': { top: '20%', bottom: '73%', left: '64%', right: '2%' },
+        '推球进outpost次数': { top: '30%', bottom: '63%', left: '64%', right: '2%' },
+        '阻挡路线/pin次数': { top: '40%', bottom: '53%', left: '64%', right: '2%' },
+        '冲撞射球次数': { top: '50%', bottom: '43%', left: '64%', right: '2%' },
+        '普通犯规次数': { top: '60%', bottom: '33%', left: '64%', right: '2%' },
+        '技术犯规次数': { top: '70%', bottom: '23%', left: '64%', right: '2%' },
+        '中场运球次数': { top: '80%', bottom: '13%', left: '64%', right: '2%' },
+        '前场运球次数': { top: '90%', bottom: '3%', left: '64%', right: '2%' },
     },
     [ALLIANCE.BLUE]: {
         '爬升开始': { top: '36%', bottom: '58%', left: '86%', right: '4%' },
@@ -112,7 +122,16 @@ export const positions = {
         'Hub': { top: '42%', bottom: '43%', left: '52%', right: '42%' },
         '右坡': { top: '24%', bottom: '61%', left: '52%', right: '42%' },
         '右洞': { top: '5%', bottom: '80%', left: '52%', right: '42%' },
-        'confirm': { top: '80%', bottom: '10%', left: '6%', right: '84%' }
+        'confirm': { top: '80%', bottom: '10%', left: '6%', right: '84%' },
+
+        '推球回家次数': { top: '20%', bottom: '73%', left: '2%', right: '64%' },
+        '推球进outpost次数': { top: '30%', bottom: '63%', left: '2%', right: '64%' },
+        '阻挡路线/pin次数': { top: '40%', bottom: '53%', left: '2%', right: '64%' },
+        '冲撞射球次数': { top: '50%', bottom: '43%', left: '2%', right: '64%' },
+        '普通犯规次数': { top: '60%', bottom: '33%', left: '2%', right: '64%' },
+        '技术犯规次数': { top: '70%', bottom: '23%', left: '2%', right: '64%' },
+        '中场运球次数': { top: '80%', bottom: '13%', left: '2%', right: '64%' },
+        '前场运球次数': { top: '90%', bottom: '3%', left: '2%', right: '64%' },
     }
 }
 

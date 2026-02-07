@@ -26,6 +26,7 @@ export const useRobotStateStore = defineStore('robot', {
             toggleCount: 0,
 
             groupActive: null,
+            groupAccuracy: null,
         }
     },
     getters: {
@@ -73,6 +74,7 @@ export const useRobotStateStore = defineStore('robot', {
             this.group5 = this.manager.createGroupIfNotExist('group5', 1)
             this.group7 = this.manager.createGroupIfNotExist('group7', 1)
             this.groupActive = this.manager.createGroupIfNotExist('groupActive', 2)
+            this.groupAccuracy = this.manager.createGroupIfNotExist('groupAccuracy', 1)
         },
 
         setAlliance(alliance) {
@@ -101,6 +103,7 @@ export const useRobotStateStore = defineStore('robot', {
             this.hasBall = value
             if (!this.hasBall) {
                 this.manager.deselectOptions('groupActive', this.groupActive.selectedOptions.slice())
+                this.manager.deselectOptions('groupAccuracy', this.groupAccuracy.selectedOptions.slice())
             }
         },
         setClimbStarted(value) {
