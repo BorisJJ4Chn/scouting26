@@ -1,24 +1,14 @@
 <script setup>
 import { COLORS, ALLIANCE } from '../constants'
+import { useRobotStateStore } from '../store/RobotState'
 
-const props = defineProps({
-  alliance: {
-    type: String,
-    default: ALLIANCE.RED
-  }
-})
-
-const emit = defineEmits(['start'])
+const store = useRobotStateStore()
 
 // 获取按钮颜色
 const getButtonColor = () => {
-  return props.alliance === ALLIANCE.RED ? COLORS.RED : COLORS.BLUE
+  return store.alliance === ALLIANCE.RED ? COLORS.RED : COLORS.BLUE
 }
 
-// 处理开始按钮点击
-const handleStartClick = () => {
-  emit('start')
-}
 </script>
 
 <template>
@@ -26,7 +16,7 @@ const handleStartClick = () => {
     <button 
       class="start-button"
       :style="{ backgroundColor: getButtonColor() }"
-      @click="handleStartClick"
+      @click="store.toggleState()"
     >
       比赛开始
     </button>

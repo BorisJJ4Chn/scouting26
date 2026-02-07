@@ -1,26 +1,19 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { COLORS, ALLIANCE } from '../constants'
-
-const emit = defineEmits(['confirm', 'allianceChange'])
+import { useRobotStateStore } from '../store/RobotState'
 
 const teamNumber = ref('')
 const alliance = ref('')
 const matchType = ref('')
 const matchNumber = ref('')
 
+const store = useRobotStateStore()
+
 watch(alliance, (newValue) => {
-  emit('allianceChange', newValue)
+  store.alliance = newValue
 })
 
-const handleConfirm = () => {
-  emit('confirm', {
-    teamNumber: teamNumber.value,
-    alliance: alliance.value,
-    matchType: matchType.value,
-    matchNumber: matchNumber.value
-  })
-}
 </script>
 
 <template>
@@ -87,7 +80,13 @@ const handleConfirm = () => {
         />
       </div>
     </div>
-    <button class="confirm-button" @click="handleConfirm" :disabled="!teamNumber || !alliance || !matchType || !matchNumber">确认</button>
+    <button
+      class="confirm-button"
+      @click="store.toggleState()"
+      :disabled="!teamNumber || !alliance || !matchType || !matchNumber"
+    >
+      确认
+    </button>
   </div>
 </template>
 

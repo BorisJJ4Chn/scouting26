@@ -23,11 +23,10 @@ export class OptionButtonGroupManager {
   }
 
   // 创建分组
-  createGroup(groupName, maxSelections = -1) {
-    if (groupName in this.groups) {
-      throw new Error(`分组 ${groupName} 已存在`)
+  createGroupIfNotExist(groupName, maxSelections = -1) {
+    if (!(groupName in this.groups)) {
+      this.groups[groupName] = new OptionButtonGroup(groupName, maxSelections)
     }
-    this.groups[groupName] = new OptionButtonGroup(groupName, maxSelections)
     return this.groups[groupName]
   }
 
@@ -84,15 +83,15 @@ export class OptionButtonGroupManager {
 }
 
 // 全局选项按钮组实例
-const globalOptionButtonManager = new OptionButtonGroupManager()
+const globalOptionButtonGroupManager = new OptionButtonGroupManager()
 
 // 提供全局选项按钮组实例
-export function provideOptionButtonManager() {
-  provide('optionButtonManager', globalOptionButtonManager)
+export function provideOptionButtonGroupManager() {
+  provide('optionButtonGroupManager', globalOptionButtonGroupManager)
 }
 
 // 注入全局选项按钮组实例
-export function useOptionButtonManager() {
-  const optionButtonManager = inject('optionButtonManager', globalOptionButtonManager)
-  return optionButtonManager
+export function useOptionButtonGroupManager() {
+  const optionButtonGroupManager = inject('optionButtonGroupManager', globalOptionButtonGroupManager)
+  return optionButtonGroupManager
 }

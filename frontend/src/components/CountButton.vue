@@ -1,5 +1,9 @@
 <script setup>
-import { inject, ref } from 'vue'
+import { useRobotStateStore } from '../store/RobotState.js'
+import { ref } from 'vue'
+
+// 获取 store
+const store = useRobotStateStore()
 
 // 按钮引用
 const buttonRef = ref(null)
@@ -21,15 +25,10 @@ const props = defineProps({
 // 定义组件事件
 const emit = defineEmits(['click'])
 
-// 注入全局计时器
-const timer = inject('timer', {
-  getTime: () => 0
-})
-
 // 按钮点击事件处理
 const handleClick = () => {
   // 获取当前时间
-  const currentTime = timer.getTime()
+  const currentTime = store.timer.getTime()
   
   // 向控制台输出当前时间和按钮名称
   console.log(`[CountButton] ${props.name}: ${currentTime} ms`)
@@ -51,31 +50,10 @@ const handleClick = () => {
 <template>
   <button
     ref="buttonRef"
-    class="count-button"
+    class="m-global-button"
     :style="style"
     @click="handleClick"
   >
     {{ name }}
   </button>
 </template>
-
-<style scoped>
-.count-button {
-  position: absolute;
-  border: none;
-  border-radius: 1vw;
-  cursor: pointer;
-  font-size: 1.5vw;
-  font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  transition: all 0.3s ease;
-}
-
-.count-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-</style>

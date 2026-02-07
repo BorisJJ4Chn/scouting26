@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { useOptionButtonManager } from './OptionButtonGroupManager'
+import { useOptionButtonGroupManager } from './OptionButtonGroupManager'
 
 // 按钮引用
 const buttonRef = ref(null)
@@ -32,7 +32,7 @@ const props = defineProps({
 const emit = defineEmits(['select', 'deselect'])
 
 // 获取全局选项按钮组实例
-const optionButtonGroupManager = useOptionButtonManager()
+const optionButtonGroupManager = useOptionButtonGroupManager()
 
 // 计算属性，用于响应式更新选中状态
 const isSelected = computed(() => {
@@ -90,7 +90,7 @@ onUnmounted(() => {
 <template>
   <button
     ref="buttonRef"
-    class="option-button"
+    class="m-global-button"
     :class="{ active: isSelected }"
     :style="style"
     @click="handleClick"
@@ -98,29 +98,3 @@ onUnmounted(() => {
     {{ name }}
   </button>
 </template>
-
-<style scoped>
-.option-button {
-  position: absolute;
-  border: none;
-  border-radius: 1vw;
-  cursor: pointer;
-  font-size: 1.2vw;
-  font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  transition: all 0.3s ease;
-}
-
-.option-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.option-button.active {
-  border: 2px solid #fff;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-}
-</style>

@@ -1,77 +1,23 @@
 <script setup>
-import { ref, computed, onMounted, provide } from 'vue'
+import { ref, computed, onMounted, provide, watch } from 'vue'
 import Init from './views/Init.vue'
 import PreMatch from './views/PreMatch.vue'
 import BeforeStart from './views/BeforeStart.vue'
-import AutoState from './views/AutoState.vue'
-import OptionButton from './components/OptionButton.vue'
-import CountButton from './components/CountButton.vue'
-import { COLORS, ALLIANCE } from './constants'
+import AutoState from './views/AutoStateButtons.vue'
+import MainButtons from './views/MainButtons.vue'
+import TimerAndState from './views/TimerAndState.vue'
+import { COLORS, ALLIANCE, STATES } from './constants.js'
+import { useRobotStateStore } from './store/RobotState.js'
+import AskTransition from './views/AskTransition.vue'
 
-// 状态机状态定义
-const STATES = {
-  INIT: 'init',
-  PREMATCH: 'prematch',
-  BEFORE_START: 'beforeStart',
-  AUTO: 'auto',
-  TRANSITION: 'transition',
-  ON: 'on',
-  OFF: 'off',
-  ENDGAME: 'endgame'
-}
-
-const currentState = ref(STATES.INIT)
-const alliance = ref(ALLIANCE.RED)
 const containerSize = ref({ width: 0, height: 0 })
 
-// 计时器状态
-const startTime = ref(null)
-
-// 开始计时
-const startTimer = () => {
-  startTime.value = Date.now()
-}
-
-// 获取当前时间（毫秒）
-const getCurrentTime = () => {
-  return 22000;
-  if (!startTime.value) return 0
-  return Date.now() - startTime.value
-}
-
-// 提供全局计时器功能
-provide('timer', {
-  start: startTimer,
-  getTime: getCurrentTime
-})
+const store = useRobotStateStore()
+store.createOptionButtonGroups()
 
 const backgroundImage = computed(() => {
-  return alliance.value === ALLIANCE.RED ? '/red.png' : '/blue.png'
+  return store.alliance === ALLIANCE.RED ? '/red.png' : '/blue.png'
 })
-
-const handleConfirm = (data) => {
-  alliance.value = data.alliance
-  currentState.value = STATES.PREMATCH
-  updateContainerSize()
-}
-
-const handleAllianceChange = (newAlliance) => {
-  alliance.value = newAlliance
-  updateContainerSize()
-}
-
-const handlePreMatchConfirm = () => {
-  currentState.value = STATES.BEFORE_START
-}
-
-const handleStart = () => {
-  startTimer()
-  currentState.value = STATES.AUTO
-}
-
-const handleAutoEnd = () => {
-  currentState.value = STATES.TRANSITION
-}
 
 // 计算并更新容器大小以匹配背景图片
 const updateContainerSize = () => {
@@ -96,14 +42,16 @@ const updateContainerSize = () => {
   }
 }
 
-// 监听窗口大小变化
-const handleResize = () => {
-  updateContainerSize()
-}
+watch(() => store.currentState, (newState) => {
+  if (newState === STATES.AUTO) {
+    store.timer.start()
+  }
+})
 
 onMounted(() => {
   updateContainerSize()
-  window.addEventListener('resize', handleResize)
+  window.addEventListener('resize', updateContainerSize)
+  store.createOptionButtonGroups()
 })
 </script>
 
@@ -116,17 +64,40 @@ onMounted(() => {
       height: containerSize.height + 'px'
     }"
   >
-    <template v-if="currentState === STATES.INIT">
-      <Init @confirm="handleConfirm" @allianceChange="handleAllianceChange" />
+    <template v-if="store.currentState === STATES.INIT">
+      <Init />
     </template>
-    <template v-else-if="currentState === STATES.PREMATCH">
-      <PreMatch :alliance="alliance" @confirm="handlePreMatchConfirm" />
+    <template v-if="store.currentState === STATES.PREMATCH">
+      <PreMatch />  
     </template>
-    <template v-else-if="currentState === STATES.BEFORE_START">
-      <BeforeStart :alliance="alliance" @start="handleStart" />
+    <template v-if="store.currentState === STATES.BEFORE_START">
+      <BeforeStart />
     </template>
-    <template v-else-if="currentState === STATES.AUTO">
-      <AutoState :alliance="alliance" @autoEnd="handleAutoEnd" />
+
+    <template v-if="
+      store.currentState !== STATES.INIT
+        && store.currentState !== STATES.PREMATCH
+        && store.currentState !== STATES.BEFORE_START
+    ">
+      <TimerAndState />
+    </template>
+
+
+    <template v-if="store.currentState === STATES.AUTO">
+      <AutoState />
+    </template>
+
+    <template v-if="
+      store.currentState !== STATES.INIT 
+        && store.currentState !== STATES.PREMATCH
+        && store.currentState !== STATES.BEFORE_START 
+        && store.currentState !== STATES.AUTO_PAUSE
+    ">
+      <MainButtons />
+    </template>
+
+    <template v-if="store.currentState === STATES.TRANSITION_RESULT && store.winner !== ALLIANCE.RED && store.winner !== ALLIANCE.BLUE">
+      <AskTransition />
     </template>
   </div>
 </template>
@@ -166,5 +137,43 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+
+.m-global-button {
+  position: absolute;
+  border: none;
+  border-radius: 1vw;
+  cursor: pointer;
+  font-size: 1vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: all 0.3s ease;
+  color: white;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.m-global-button:hover:not(:disabled, .active) {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  opacity: 0.9;
+}
+
+.m-global-button:active:not(:disabled) {
+  border: 2px solid #fff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  transform: scale(0.95);
+}
+
+.m-global-button.active {
+  box-shadow: 0 0 0 0.3vw rgba(255, 255, 255, 0.8);
+}
+
+.m-global-button:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
 }
 </style>
