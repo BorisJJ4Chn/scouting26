@@ -2,7 +2,8 @@ export const COLORS = {
   RED: '#ff0000',
   BLUE: '#0000ff',
   YELLOW: '#eabb00',
-  GREEN: '#42b883',
+  GREEN: '#00ce30',
+  CYAN: '#00bedf',
   VIOLET: '#9400d3',
   PINK: '#ff69b4',
   AMBER: '#ff9900',
@@ -25,8 +26,8 @@ export const STATES = {
   AUTO_PAUSE: 'autoPause',
   TRANSITION: 'transition',
   TRANSITION_RESULT: 'transitionResult',
-  ON: 'on',
-  OFF: 'off',
+  ACTIVE: 'active',
+  INACTIVE: 'inactive',
   ENDGAME: 'endgame'
 }
 
@@ -38,7 +39,7 @@ export const STATES_TO_SHOW = {
   [STATES.AUTO_PAUSE]: '切换手动',
   [STATES.TRANSITION]: '转换',
   [STATES.TRANSITION_RESULT]: 'Hub闪烁',
-  [STATES.ON]: '开启',
-  [STATES.OFF]: '关闭',
+  [STATES.ACTIVE]: '进攻',
+  [STATES.INACTIVE]: '布局',
   [STATES.ENDGAME]: '终场'
 }

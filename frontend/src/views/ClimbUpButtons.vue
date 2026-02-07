@@ -1,0 +1,51 @@
+<script setup>
+import { COLORS } from '../constants.js'
+import { getButtonPosition } from '../utils/ButtonPositionConfig.js'
+import CountButton from '../components/CountButton.vue'
+import OptionButton from '../components/OptionButton.vue'
+import { useRobotStateStore } from '../store/RobotState.js'
+
+const store = useRobotStateStore()
+</script>
+
+<template>
+  <!-- 第一组 -->
+  <CountButton 
+    name="爬升开始"
+    :style="{ backgroundColor: COLORS.RED, ...getButtonPosition('爬升开始') }"
+    :disabled="!(store.getPreLoadEnded && store.isInState && !store.climbStarted)"
+    @click="store.setClimbStarted(true)"
+  />
+  <OptionButton 
+    name="左爬"
+    groupName="group1"
+    :style="{ backgroundColor: COLORS.RED, ...getButtonPosition('左爬') }"
+    :disabled="!(store.getPreLoadEnded && store.isInState && store.climbStarted)"
+  />
+  <OptionButton 
+    name="中爬"
+    groupName="group1"
+    :style="{ backgroundColor: COLORS.RED, ...getButtonPosition('中爬') }"
+    :disabled="!(store.getPreLoadEnded && store.isInState && store.climbStarted)"
+  />
+  <OptionButton 
+    name="右爬"
+    groupName="group1"
+    :style="{ backgroundColor: COLORS.RED, ...getButtonPosition('右爬') }"
+    :disabled="!(store.getPreLoadEnded && store.isInState && store.climbStarted)"
+  />
+
+  <!-- 第二组 -->
+  <OptionButton 
+    name="成功"
+    groupName="group2"
+    :style="{ backgroundColor: COLORS.CYAN, ...getButtonPosition('成功') }"
+    :disabled="!(store.getPreLoadEnded && store.isInState && store.climbStarted && store.group1.selected())"
+  />
+  <OptionButton 
+    name="失败"
+    groupName="group2"
+    :style="{ backgroundColor: COLORS.CYAN, ...getButtonPosition('失败') }"
+    :disabled="!(store.getPreLoadEnded && store.isInState && store.climbStarted && store.group1.selected())"
+  />
+</template>

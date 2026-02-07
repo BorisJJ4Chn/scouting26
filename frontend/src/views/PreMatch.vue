@@ -1,9 +1,8 @@
 <script setup>
 import { COLORS, ALLIANCE } from '../constants'
-import { getButtonPosition } from './ButtonPositionConfig'
+import { getButtonPosition } from '../utils/ButtonPositionConfig'
 import OptionButton from '../components/OptionButton.vue'
 import CountButton from '../components/CountButton.vue'
-import { useOptionButtonGroupManager } from '../components/OptionButtonGroupManager'
 import { useRobotStateStore } from '../store/RobotState'
 
 const store = useRobotStateStore()
@@ -13,7 +12,7 @@ const getButtonColor = () => {
   return store.alliance === ALLIANCE.RED ? COLORS.RED : COLORS.BLUE
 }
 
-const optionButtonManager = useOptionButtonGroupManager()
+const optionButtonManager = store.manager
 
 // 删除旧分组
 optionButtonManager.deleteGroupIfExist('platformGroup')

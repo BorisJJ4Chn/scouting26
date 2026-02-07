@@ -1,19 +1,18 @@
 import { defineStore } from 'pinia'
-import { useOptionButtonGroupManager } from '../components/OptionButtonGroupManager.js'
 import { ALLIANCE, STATES } from '../constants.js'
 import { useTimer } from '../utils/useTimer.js'
+import { OptionButtonGroupManager } from '../components/OptionButtonGroupManager.js'
 
 export const useRobotStateStore = defineStore('robot', {
     state: () => {
         return {
             timer: useTimer(),
+            manager: new OptionButtonGroupManager(),
 
             alliance: ALLIANCE.RED,
             currentState: STATES.INIT,
             // AutoState variables
             isInState: true,
-            fromMid: null,
-            outCount: 0,
             hasBall: false,
             climbStarted: false,
             group1: null,
@@ -25,16 +24,11 @@ export const useRobotStateStore = defineStore('robot', {
 
             // TeleOpratingState variables
             toggleCount: 0,
+
+            groupActive: null,
         }
     },
     getters: {
-        getAlliance: (state) => state.alliance,
-        getCurrentState: (state) => state.currentState,
-        getIsInState: (state) => state.isInState,
-        getFromMid: (state) => state.fromMid,
-        getOutCount: (state) => state.outCount,
-        getHasBall: (state) => state.hasBall,
-        getClimbStarted: (state) => state.climbStarted,
         getPreLoadEnded: (state) => state.group7.selected() || state.currentState !== STATES.AUTO,
     },
     actions: {
@@ -51,15 +45,21 @@ export const useRobotStateStore = defineStore('robot', {
                 this.currentState = STATES.AUTO_PAUSE
             } else if (this.currentState === STATES.AUTO_PAUSE && time >= 23.0) {
                 this.currentState = STATES.TRANSITION
+                this.climbStarted = false
+                this.preLoadEnded = true
             } else if (this.currentState === STATES.TRANSITION && time >= 30.0) {
                 this.currentState = STATES.TRANSITION_RESULT
-            } else if (this.currentState === STATES.TRANSITION_RESULT && time >= 33.0) {
-                this.currentState = this.winner === this.alliance ? STATES.OFF : STATES.ON
+            } else if (
+                this.currentState === STATES.TRANSITION_RESULT
+                && (this.winner === ALLIANCE.RED || this.winner === ALLIANCE.BLUE)
+                && time >= 33.0
+            ) {
+                this.currentState = this.winner === this.alliance ? STATES.INACTIVE : STATES.ACTIVE
                 this.toggleCount = 1
-            } else if ((this.currentState === STATES.ON || this.currentState === STATES.OFF) && time >= 33.0 + 25.0 * this.toggleCount) {
+            } else if ((this.currentState === STATES.ACTIVE || this.currentState === STATES.INACTIVE) && time >= 33.0 + 25.0 * this.toggleCount) {
                 if (this.toggleCount < 4) {
                     this.toggleCount++
-                    this.currentState = this.currentState === STATES.ON ? STATES.OFF : STATES.ON
+                    this.currentState = this.currentState === STATES.ACTIVE ? STATES.INACTIVE : STATES.ACTIVE
                 }
                 else {
                     this.currentState = STATES.ENDGAME
@@ -68,10 +68,11 @@ export const useRobotStateStore = defineStore('robot', {
         },
 
         createOptionButtonGroups() {
-            this.group1 = useOptionButtonGroupManager().createGroupIfNotExist('group1', 1)
-            this.group2 = useOptionButtonGroupManager().createGroupIfNotExist('group2', 1)
-            this.group5 = useOptionButtonGroupManager().createGroupIfNotExist('group5', 1)
-            this.group7 = useOptionButtonGroupManager().createGroupIfNotExist('group7', 1)
+            this.group1 = this.manager.createGroupIfNotExist('group1', 1)
+            this.group2 = this.manager.createGroupIfNotExist('group2', 1)
+            this.group5 = this.manager.createGroupIfNotExist('group5', 1)
+            this.group7 = this.manager.createGroupIfNotExist('group7', 1)
+            this.groupActive = this.manager.createGroupIfNotExist('groupActive', 2)
         },
 
         setAlliance(alliance) {
@@ -83,6 +84,12 @@ export const useRobotStateStore = defineStore('robot', {
         // AutoState actions
         setIsInState(value) {
             this.isInState = value
+            if (this.isInState) {
+                this.manager.deselectOptions('group5', this.group5.selectedOptions.slice())
+            }
+            else {
+                this.fromMid = false
+            }
         },
         setFromMid(value) {
             this.fromMid = value
@@ -92,6 +99,9 @@ export const useRobotStateStore = defineStore('robot', {
         },
         setHasBall(value) {
             this.hasBall = value
+            if (!this.hasBall) {
+                this.manager.deselectOptions('groupActive', this.groupActive.selectedOptions.slice())
+            }
         },
         setClimbStarted(value) {
             this.climbStarted = value

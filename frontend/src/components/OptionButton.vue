@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { useOptionButtonGroupManager } from './OptionButtonGroupManager'
+import {useRobotStateStore} from '../store/RobotState.js'
+
+const store = useRobotStateStore()
 
 // 按钮引用
 const buttonRef = ref(null)
@@ -32,7 +34,7 @@ const props = defineProps({
 const emit = defineEmits(['select', 'deselect'])
 
 // 获取全局选项按钮组实例
-const optionButtonGroupManager = useOptionButtonGroupManager()
+const optionButtonGroupManager = store.manager
 
 // 计算属性，用于响应式更新选中状态
 const isSelected = computed(() => {

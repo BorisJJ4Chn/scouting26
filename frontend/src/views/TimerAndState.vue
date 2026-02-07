@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { getButtonPosition } from './ButtonPositionConfig.js'
+import { getButtonPosition } from '../utils/ButtonPositionConfig.js'
 import { useRobotStateStore } from '../store/RobotState.js'
 import { STATES, STATES_TO_SHOW, COLORS } from '../constants.js'
 

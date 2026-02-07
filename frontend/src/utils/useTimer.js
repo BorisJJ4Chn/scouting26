@@ -13,7 +13,7 @@ export function useTimer() {
   // 获取当前时间（毫秒）
   const getTime = () => {
     if (!startTime.value) return 0
-    const ratio = 3.0
+    const ratio = 1.0
     return (Date.now() - startTime.value) * ratio
   }
 

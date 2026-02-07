@@ -80,18 +80,12 @@ export class OptionButtonGroupManager {
 
     return false
   }
-}
 
-// 全局选项按钮组实例
-const globalOptionButtonGroupManager = new OptionButtonGroupManager()
-
-// 提供全局选项按钮组实例
-export function provideOptionButtonGroupManager() {
-  provide('optionButtonGroupManager', globalOptionButtonGroupManager)
-}
-
-// 注入全局选项按钮组实例
-export function useOptionButtonGroupManager() {
-  const optionButtonGroupManager = inject('optionButtonGroupManager', globalOptionButtonGroupManager)
-  return optionButtonGroupManager
+  // 取消选择所有选项
+  deselectOptions(groupName, optionNames) {
+    const group = this.getGroup(groupName)
+    for (const optionName of optionNames) {
+      this.deselectOption(groupName, optionName)
+    }
+  }
 }

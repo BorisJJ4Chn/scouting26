@@ -1,4 +1,4 @@
-import { ALLIANCE } from '../constants'
+import { ALLIANCE } from '../constants.js'
 import { useRobotStateStore } from '../store/RobotState.js'
 
 export const positions = {
@@ -31,6 +31,10 @@ export const positions = {
 
         '撞车': { top: '10%', bottom: '84%', left: '88%', right: '2%' },
 
+        '放弃': { top: '82%', bottom: '2%', left: '3%', right: '87%' },
+        '被防守': { top: '21%', bottom: '73%', left: '3%', right: '87%' },
+        '跑打': { top: '29%', bottom: '65%', left: '3%', right: '87%' },
+
         'PreLoad没射': { top: '68%', bottom: '26%', left: '3%', right: '87%' },
         'PreLoad射丢': { top: '76%', bottom: '18%', left: '3%', right: '87%' },
         'PreLoad全进': { top: '84%', bottom: '10%', left: '3%', right: '87%' },
@@ -39,6 +43,7 @@ export const positions = {
         '线后': { top: '75%', bottom: '19%', left: '38%', right: '52%' },
         '靠塔': { top: '50%', bottom: '44%', left: '27%', right: '63%' },
         '任意': { top: '15%', bottom: '79%', left: '29%', right: '61%' },
+        '射球准确率': { top: '32%', bottom: '64%', left: '29%', right: '61%' },
 
         '当前状态': { top: '2%', bottom: '92%', left: '3%', right: '87%' },
         '计时器': { top: '10%', bottom: '84%', left: '3%', right: '87%' },
@@ -79,6 +84,10 @@ export const positions = {
         '边切': { top: '76%', bottom: '18%', left: '17%', right: '73%' },
 
         '撞车': { top: '10%', bottom: '84%', left: '3%', right: '87%' },
+
+        '放弃': { top: '82%', bottom: '2%', left: '86%', right: '4%' },
+        '被防守': { top: '63%', bottom: '31%', left: '86%', right: '4%' },
+        '跑打': { top: '71%', bottom: '23%', left: '86%', right: '4%' },
 
         'PreLoad没射': { top: '65%', bottom: '29%', left: '86%', right: '4%' },
         'PreLoad射丢': { top: '73%', bottom: '21%', left: '86%', right: '4%' },

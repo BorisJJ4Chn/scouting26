@@ -6,7 +6,9 @@ import BeforeStart from './views/BeforeStart.vue'
 import AutoState from './views/AutoStateButtons.vue'
 import MainButtons from './views/MainButtons.vue'
 import TimerAndState from './views/TimerAndState.vue'
-import { COLORS, ALLIANCE, STATES } from './constants.js'
+import ActiveStateButtons from './views/ActiveStateButtons.vue'
+import ClimbUpButtons from './views/ClimbUpButtons.vue'
+import { ALLIANCE, STATES } from './constants.js'
 import { useRobotStateStore } from './store/RobotState.js'
 import AskTransition from './views/AskTransition.vue'
 
@@ -68,36 +70,68 @@ onMounted(() => {
       <Init />
     </template>
     <template v-if="store.currentState === STATES.PREMATCH">
-      <PreMatch />  
+      <PreMatch />
     </template>
     <template v-if="store.currentState === STATES.BEFORE_START">
       <BeforeStart />
     </template>
 
     <template v-if="
-      store.currentState !== STATES.INIT
-        && store.currentState !== STATES.PREMATCH
-        && store.currentState !== STATES.BEFORE_START
+      store.currentState === STATES.AUTO
+        || store.currentState === STATES.AUTO_PAUSE
+        || store.currentState === STATES.TRANSITION
+        || store.currentState === STATES.TRANSITION_RESULT
+        || store.currentState === STATES.ACTIVE
+        || store.currentState === STATES.INACTIVE
+        || store.currentState === STATES.ENDGAME
     ">
       <TimerAndState />
     </template>
-
 
     <template v-if="store.currentState === STATES.AUTO">
       <AutoState />
     </template>
 
     <template v-if="
-      store.currentState !== STATES.INIT 
-        && store.currentState !== STATES.PREMATCH
-        && store.currentState !== STATES.BEFORE_START 
-        && store.currentState !== STATES.AUTO_PAUSE
+      store.currentState === STATES.AUTO
+        || store.currentState === STATES.AUTO_PAUSE
+    ">
+      <ClimbUpButtons />
+    </template>
+
+    <template v-if="
+      store.currentState === STATES.TRANSITION
+        || store.currentState === STATES.ENDGAME
+        || store.currentState === STATES.ACTIVE
+        || store.currentState === STATES.INACTIVE
+        || store.currentState === STATES.ENDGAME
+    ">
+      <ClimbUpButtons />
+    </template>
+
+    <template v-if="
+      store.currentState === STATES.AUTO
+        || store.currentState === STATES.TRANSITION
+        || store.currentState === STATES.ACTIVE
+        || store.currentState === STATES.INACTIVE
+        || store.currentState === STATES.ENDGAME
     ">
       <MainButtons />
     </template>
 
-    <template v-if="store.currentState === STATES.TRANSITION_RESULT && store.winner !== ALLIANCE.RED && store.winner !== ALLIANCE.BLUE">
+    <template v-if="
+      store.currentState === STATES.TRANSITION_RESULT
+        && store.winner !== ALLIANCE.RED
+        && store.winner !== ALLIANCE.BLUE
+    ">
       <AskTransition />
+    </template>
+
+    <template v-if="
+      store.currentState === STATES.ACTIVE
+        || store.currentState === STATES.ENDGAME
+    ">
+      <ActiveStateButtons />
     </template>
   </div>
 </template>

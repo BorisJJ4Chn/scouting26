@@ -3,7 +3,7 @@ import { computed, inject } from 'vue'
 import { COLORS, ALLIANCE } from '../constants'
 import CountButton from '../components/CountButton.vue'
 import { useRobotStateStore } from '../store/RobotState.js'
-import { getButtonPosition } from './ButtonPositionConfig.js'
+import { getButtonPosition } from '../utils/ButtonPositionConfig.js'
 
 const store = useRobotStateStore()
 
@@ -15,6 +15,16 @@ const anotherAlliance = computed(() => {
   return store.alliance === ALLIANCE.RED ? ALLIANCE.BLUE : ALLIANCE.RED
 })
 
+const remainingCount = computed(() => {
+  if (store.winner === null) {
+    return '剩余3次'
+  }
+  if (store.winner === 1) {
+    return '剩余2次'
+  }
+  return '按下后确认'
+})
+
 </script>
 
 <template>
@@ -22,7 +32,7 @@ const anotherAlliance = computed(() => {
     class="m-global-button"
     :style="{ backgroundColor: COLORS.YELLOW, ...getButtonPosition('询问Hub闪烁'), fontSize: '5vw' }"
   >
-    是否看见本方Hub闪烁
+    是否看见本方Hub闪烁<br>（{{remainingCount}}）
   </div>
   <CountButton 
       name="是"
