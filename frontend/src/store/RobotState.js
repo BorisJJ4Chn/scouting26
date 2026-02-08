@@ -31,6 +31,7 @@ export const useRobotStateStore = defineStore('robot', {
     },
     getters: {
         getPreLoadEnded: (state) => state.group7.selected() || state.currentState !== STATES.AUTO,
+        getTransitionAlready: (state) => state.winner === ALLIANCE.RED || state.winner === ALLIANCE.BLUE,
     },
     actions: {
         toggleState() {

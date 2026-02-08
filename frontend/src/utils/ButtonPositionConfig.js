@@ -45,10 +45,10 @@ export const positions = {
         '任意': { top: '15%', bottom: '79%', left: '29%', right: '61%' },
         '准确率': { top: '2%', bottom: '94%', left: '40%', right: '52%' },
         '滑动条': { top: '1%', bottom: '92%', left: '16%', right: '61%' },
+        '弃球': { top: '70%', bottom: '24%', left: '3%', right: '87%' },
 
         '当前状态': { top: '2%', bottom: '92%', left: '3%', right: '87%' },
         '计时器': { top: '10%', bottom: '84%', left: '3%', right: '87%' },
-        '自动结束': { top: '18%', bottom: '76%', left: '3%', right: '87%' },
 
 
         '左台': { top: '8%', bottom: '77%', left: '12%', right: '82%' },
@@ -80,7 +80,7 @@ export const positions = {
         '成功': { top: '52%', bottom: '42%', left: '86%', right: '4%' },
         '失败': { top: '44%', bottom: '50%', left: '86%', right: '4%' },
 
-        '吸中场': { top: '10%', bottom: '84%', left: '16%', right: '74%' },
+        '吸中场': { top: '10%', bottom: '84%', left: '26%', right: '64%' },
         '吸DEPOT': { top: '68%', bottom: '26%', left: '70%', right: '20%' },
         '吸OUTPOST': { top: '10%', bottom: '84%', left: '75%', right: '15%' },
 
@@ -93,7 +93,7 @@ export const positions = {
         '球阵角': { top: '70%', bottom: '24%', left: '28%', right: '62%' },
         '边切': { top: '76%', bottom: '18%', left: '17%', right: '73%' },
 
-        '撞车': { top: '10%', bottom: '84%', left: '3%', right: '87%' },
+        '撞车': { top: '10%', bottom: '84%', left: '2%', right: '88%' },
 
         '放弃': { top: '82%', bottom: '2%', left: '86%', right: '4%' },
         '被防守': { top: '63%', bottom: '31%', left: '86%', right: '4%' },
@@ -107,10 +107,12 @@ export const positions = {
         '线后': { top: '75%', bottom: '19%', left: '52%', right: '38%' },
         '靠塔': { top: '44%', bottom: '50%', left: '62%', right: '28%' },
         '任意': { top: '15%', bottom: '79%', left: '60%', right: '30%' },
+        '准确率': { top: '2%', bottom: '94%', left: '47%', right: '45%' },
+        '滑动条': { top: '1%', bottom: '92%', left: '57%', right: '20%' },
+        '弃球': { top: '24%', bottom: '70%', left: '86%', right: '4%' },
 
         '当前状态': { top: '2%', bottom: '92%', left: '89%', right: '1%' },
         '计时器': { top: '10%', bottom: '84%', left: '89%', right: '1%' },
-        '自动结束': { top: '18%', bottom: '76%', left: '89%', right: '1%' },
 
 
         '左台': { top: '76%', bottom: '9%', left: '82%', right: '12%' },

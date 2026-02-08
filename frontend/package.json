@@ -3,10 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://BorisJJ4Chn.github.io/scouting26",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "gh-pages -d dist -b gh-pages"
   },
   "dependencies": {
     "axios": "^1.13.4",
@@ -15,6 +17,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
+    "gh-pages": "^6.3.0",
     "vite": "^7.2.4"
   }
 }

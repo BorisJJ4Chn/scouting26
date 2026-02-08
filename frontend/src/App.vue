@@ -8,7 +8,6 @@ import MainButtons from './views/MainButtons.vue'
 import TimerAndState from './views/TimerAndState.vue'
 import ActiveStateButtons from './views/ActiveStateButtons.vue'
 import ClimbUpButtons from './views/ClimbUpButtons.vue'
-import CounterBar from './components/CounterBar.vue'
 import TeleopStateCounters from './views/TeleopStateCounters.vue'
 import { ALLIANCE, STATES } from './constants.js'
 import { useRobotStateStore } from './store/RobotState.js'
@@ -20,7 +19,7 @@ const store = useRobotStateStore()
 store.createOptionButtonGroups()
 
 const backgroundImage = computed(() => {
-  return store.alliance === ALLIANCE.RED ? '/red.png' : '/blue.png'
+  return store.alliance === ALLIANCE.RED ? './red.png' : './blue.png'
 })
 
 // 计算并更新容器大小以匹配背景图片
@@ -103,6 +102,7 @@ onMounted(() => {
 
     <template v-if="
       store.currentState === STATES.TRANSITION
+        || store.getTransitionAlready
         || store.currentState === STATES.ENDGAME
         || store.currentState === STATES.ACTIVE
         || store.currentState === STATES.INACTIVE
@@ -114,6 +114,7 @@ onMounted(() => {
     <template v-if="
       store.currentState === STATES.AUTO
         || store.currentState === STATES.TRANSITION
+        || store.getTransitionAlready
         || store.currentState === STATES.ACTIVE
         || store.currentState === STATES.INACTIVE
         || store.currentState === STATES.ENDGAME
@@ -123,8 +124,7 @@ onMounted(() => {
 
     <template v-if="
       store.currentState === STATES.TRANSITION_RESULT
-        && store.winner !== ALLIANCE.RED
-        && store.winner !== ALLIANCE.BLUE
+        && !store.getTransitionAlready
     ">
       <AskTransition />
     </template>
@@ -138,6 +138,7 @@ onMounted(() => {
 
     <template v-if="
       store.currentState === STATES.TRANSITION
+        || store.getTransitionAlready
         || store.currentState === STATES.ACTIVE
         || store.currentState === STATES.INACTIVE
         || store.currentState === STATES.ENDGAME
