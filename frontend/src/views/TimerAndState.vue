@@ -63,6 +63,7 @@ onUnmounted(() => {
   <div
     class="m-global-button"
     :style="{ ...getButtonPosition('计时器'), fontSize: '1vw', backgroundColor: COLORS.BLACK_TRANSPARENT }"
+    @click="store.timer.togglePause"
   >
     {{ displayTime.toFixed(2) }} s
   </div>

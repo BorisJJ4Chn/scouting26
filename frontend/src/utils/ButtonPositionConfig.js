@@ -9,9 +9,13 @@ export const positions = {
     },
     [ALLIANCE.RED]: {
         '爬升开始': { top: '42%', bottom: '52%', left: '3%', right: '87%' },
-        '左爬': { top: '42%', bottom: '52%', left: '15%', right: '75%' },
-        '中爬': { top: '50%', bottom: '44%', left: '15%', right: '75%' },
-        '右爬': { top: '58%', bottom: '36%', left: '15%', right: '75%' },
+        '左爬': { top: '42%', bottom: '52%', left: '14%', right: '76%' },
+        '中爬': { top: '50%', bottom: '44%', left: '14%', right: '76%' },
+        '右爬': { top: '58%', bottom: '36%', left: '14%', right: '76%' },
+
+        '高杆': { top: '66%', bottom: '28%', left: '14%', right: '76%' },
+        '中杆': { top: '66%', bottom: '28%', left: '25%', right: '65%' },
+        '低杆': { top: '66%', bottom: '28%', left: '36%', right: '54%' },
 
         '成功': { top: '50%', bottom: '44%', left: '3%', right: '87%' },
         '失败': { top: '58%', bottom: '36%', left: '3%', right: '87%' },
@@ -43,9 +47,6 @@ export const positions = {
         '线后': { top: '75%', bottom: '19%', left: '38%', right: '52%' },
         '靠塔': { top: '50%', bottom: '44%', left: '27%', right: '63%' },
         '任意': { top: '15%', bottom: '79%', left: '29%', right: '61%' },
-        '准确率': { top: '2%', bottom: '94%', left: '40%', right: '52%' },
-        '滑动条': { top: '1%', bottom: '92%', left: '16%', right: '61%' },
-        '弃球': { top: '70%', bottom: '24%', left: '3%', right: '87%' },
 
         '当前状态': { top: '2%', bottom: '92%', left: '3%', right: '87%' },
         '计时器': { top: '10%', bottom: '84%', left: '3%', right: '87%' },
@@ -70,12 +71,18 @@ export const positions = {
         '技术犯规次数': { top: '70%', bottom: '23%', left: '64%', right: '2%' },
         '中场运球次数': { top: '80%', bottom: '13%', left: '64%', right: '2%' },
         '前场运球次数': { top: '90%', bottom: '3%', left: '64%', right: '2%' },
+
+        '比赛记录结束': { top: '90%', bottom: '3%', left: '64%', right: '2%' },
     },
     [ALLIANCE.BLUE]: {
         '爬升开始': { top: '36%', bottom: '58%', left: '86%', right: '4%' },
-        '左爬': { top: '52%', bottom: '42%', left: '74%', right: '16%' },
-        '中爬': { top: '44%', bottom: '50%', left: '74%', right: '16%' },
-        '右爬': { top: '36%', bottom: '58%', left: '74%', right: '16%' },
+        '左爬': { top: '52%', bottom: '42%', left: '75%', right: '15%' },
+        '中爬': { top: '44%', bottom: '50%', left: '75%', right: '15%' },
+        '右爬': { top: '36%', bottom: '58%', left: '75%', right: '15%' },
+
+        '高杆': { top: '60%', bottom: '34%', left: '53%', right: '37%' },
+        '中杆': { top: '60%', bottom: '34%', left: '64%', right: '26%' },
+        '低杆': { top: '60%', bottom: '34%', left: '75%', right: '15%' },
 
         '成功': { top: '52%', bottom: '42%', left: '86%', right: '4%' },
         '失败': { top: '44%', bottom: '50%', left: '86%', right: '4%' },
@@ -107,9 +114,6 @@ export const positions = {
         '线后': { top: '75%', bottom: '19%', left: '52%', right: '38%' },
         '靠塔': { top: '44%', bottom: '50%', left: '62%', right: '28%' },
         '任意': { top: '15%', bottom: '79%', left: '60%', right: '30%' },
-        '准确率': { top: '2%', bottom: '94%', left: '47%', right: '45%' },
-        '滑动条': { top: '1%', bottom: '92%', left: '57%', right: '20%' },
-        '弃球': { top: '24%', bottom: '70%', left: '86%', right: '4%' },
 
         '当前状态': { top: '2%', bottom: '92%', left: '89%', right: '1%' },
         '计时器': { top: '10%', bottom: '84%', left: '89%', right: '1%' },
@@ -134,6 +138,8 @@ export const positions = {
         '技术犯规次数': { top: '70%', bottom: '23%', left: '2%', right: '64%' },
         '中场运球次数': { top: '80%', bottom: '13%', left: '2%', right: '64%' },
         '前场运球次数': { top: '90%', bottom: '3%', left: '2%', right: '64%' },
+
+        '比赛记录结束': { top: '90%', bottom: '3%', left: '2%', right: '64%' },
     }
 }
 

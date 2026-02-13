@@ -40,12 +40,12 @@ const store = useRobotStateStore()
     name="成功"
     groupName="group2"
     :style="{ backgroundColor: COLORS.CYAN, ...getButtonPosition('成功') }"
-    :disabled="!(store.getPreLoadEnded && store.isInState && store.climbStarted && store.group1.selected())"
+    :disabled="!(store.getPreLoadEnded && store.isInState && store.climbStarted)"
   />
   <OptionButton 
     name="失败"
     groupName="group2"
     :style="{ backgroundColor: COLORS.CYAN, ...getButtonPosition('失败') }"
-    :disabled="!(store.getPreLoadEnded && store.isInState && store.climbStarted && store.group1.selected())"
+    :disabled="!(store.getPreLoadEnded && store.isInState && store.climbStarted)"
   />
 </template>

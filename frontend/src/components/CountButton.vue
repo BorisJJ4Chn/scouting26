@@ -42,7 +42,7 @@ const handleClick = () => {
       if (buttonRef.value) {
         buttonRef.value.blur()
       }
-    }, 100)
+    }, 400)
   }
 }
 </script>
@@ -52,6 +52,7 @@ const handleClick = () => {
     ref="buttonRef"
     class="m-global-button"
     :style="style"
+    style="box-shadow: 0 0 0.3vw rgba(255, 215, 0, 0.5), 0 0 0.8vw rgba(255, 215, 0, 0.3);"
     @click="handleClick"
   >
     {{ name }}

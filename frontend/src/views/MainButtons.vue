@@ -17,18 +17,9 @@ const handleOut = () => {
   store.setIsInState(false)
 }
 
-const handleGetBallIn = () => {
-  store.setHasBall(true)
-}
-const handleGetBallOut = () => {
-  store.setHasBall(true)
-  store.setFromMid(true)
-}
 const handleReleaseBall = () => {
-  store.setHasBall(false)
+  store.manager.deselectOptions('groupActive', store.groupActive.selectedOptions.slice())
 }
-
-const accuracy = ref(50.0)
 
 </script>
 
@@ -37,20 +28,18 @@ const accuracy = ref(50.0)
   <CountButton 
     name="吸中场"
     :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('吸中场') }"
-    :disabled="!(store.getPreLoadEnded && !store.isInState && !store.hasBall)"
-    @click="handleGetBallOut"
+    :disabled="!(store.getPreLoadEnded && !store.isInState)"
+    @click="store.setFromMid(true)"
   />
   <CountButton 
     name="吸DEPOT"
     :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('吸DEPOT') }"
-    :disabled="!(store.getPreLoadEnded && store.isInState && !store.hasBall)"
-    @click="handleGetBallIn"
+    :disabled="!(store.getPreLoadEnded && store.isInState)"
   />
   <CountButton 
     name="吸OUTPOST"
     :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('吸OUTPOST') }"
-    :disabled="!(store.getPreLoadEnded && store.isInState && !store.hasBall)"
-    @click="handleGetBallIn"
+    :disabled="!(store.getPreLoadEnded && store.isInState)"
   />
 
   <!-- 第四组 -->
@@ -93,9 +82,7 @@ const accuracy = ref(50.0)
     :disabled="!(
       store.getPreLoadEnded
       && store.isInState
-      && store.hasBall
       && store.currentState !== STATES.INACTIVE
-      && store.groupAccuracy.selected()
     )"
     @click="handleReleaseBall"
   />
@@ -106,9 +93,7 @@ const accuracy = ref(50.0)
     :disabled="!(
       store.getPreLoadEnded
       && store.isInState
-      && store.hasBall
       && store.currentState !== STATES.INACTIVE
-      && store.groupAccuracy.selected()
     )"
     @click="handleReleaseBall"
   />
@@ -119,9 +104,7 @@ const accuracy = ref(50.0)
     :disabled="!(
       store.getPreLoadEnded
       && store.isInState
-      && store.hasBall
       && store.currentState !== STATES.INACTIVE
-      && store.groupAccuracy.selected()
     )"
     @click="handleReleaseBall"
   />
@@ -132,42 +115,8 @@ const accuracy = ref(50.0)
     :disabled="!(
       store.getPreLoadEnded
       && store.isInState
-      && store.hasBall
       && store.currentState !== STATES.INACTIVE
-      && store.groupAccuracy.selected()
     )"
     @click="handleReleaseBall"
   />
-  <!-- 滑动条部分 -->
-  <OptionButton
-    name="确认"
-    groupName="groupAccuracy"
-    :style="{ backgroundColor: COLORS.YELLOW, ...getButtonPosition('准确率') }"
-    :disabled="!(store.getPreLoadEnded && store.isInState && store.hasBall && store.currentState !== STATES.INACTIVE)"
-  />
-  <div
-    class='m-global-button'
-    :style="{ background: COLORS.YELLOW, ...getButtonPosition('滑动条'), display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '1vw' }"
-    :class="{'disabled': !store.getPreLoadEnded || !store.isInState || !store.hasBall || store.currentState === STATES.INACTIVE}"
-    >
-    <div 
-      class="m-global-button"
-      :style="{ textAlign: 'center', marginBottom: '0.5vw' }"
-      :class="{'disabled': !store.getPreLoadEnded || !store.isInState || !store.hasBall || store.currentState === STATES.INACTIVE}"
-    >
-      准确率：{{ accuracy.toFixed(0) }}%
-    </div>
-    <div style="width: 90%; align-items: center;">
-      <input 
-        type="range" 
-        min="0" 
-        max="100" 
-        step="0.1"
-        class="m-global-button"
-        :style="{ center: 'center', width: '80%', height: '60%' }"
-        @input="(e) => { accuracy = parseFloat(e.target.value) }"
-        :disabled="!store.getPreLoadEnded || !store.isInState || !store.hasBall || store.currentState === STATES.INACTIVE"
-      />
-    </div>
-  </div>
 </template>

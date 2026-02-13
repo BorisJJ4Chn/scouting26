@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ALLIANCE, STATES } from '../constants.js'
 import { useTimer } from '../utils/useTimer.js'
 import { OptionButtonGroupManager } from '../components/OptionButtonGroupManager.js'
+import router from '../router/index.js'
 
 export const useRobotStateStore = defineStore('robot', {
     state: () => {
@@ -27,6 +28,7 @@ export const useRobotStateStore = defineStore('robot', {
 
             groupActive: null,
             groupAccuracy: null,
+            groupClimbPosition: null,
         }
     },
     getters: {
@@ -66,6 +68,9 @@ export const useRobotStateStore = defineStore('robot', {
                 else {
                     this.currentState = STATES.ENDGAME
                 }
+            } else if (this.currentState === STATES.ENDGAME && time >= 163.0) {
+                router.push('/')
+                this.resetAll();
             }
         },
 
@@ -76,6 +81,7 @@ export const useRobotStateStore = defineStore('robot', {
             this.group7 = this.manager.createGroupIfNotExist('group7', 1)
             this.groupActive = this.manager.createGroupIfNotExist('groupActive', 2)
             this.groupAccuracy = this.manager.createGroupIfNotExist('groupAccuracy', 1)
+            this.groupClimbPosition = this.manager.createGroupIfNotExist('groupClimbPosition', 1)
         },
 
         setAlliance(alliance) {
@@ -124,6 +130,28 @@ export const useRobotStateStore = defineStore('robot', {
             else {
                 this.winner = winner
             }
+        },
+
+        resetAll() {
+            this.timer.reset()
+            this.manager = new OptionButtonGroupManager()
+
+            this.alliance = ALLIANCE.RED
+            this.currentState = STATES.INIT
+
+            this.isInState = true
+            this.hasBall = false
+            this.climbStarted = false
+            this.group1 = null
+            this.group2 = null
+            this.group5 = null
+            this.group7 = null
+
+            this.winner = null
+            this.toggleCount = 0
+            this.groupActive = null
+            this.groupAccuracy = null
+            this.groupClimbPosition = null
         }
     }
 })

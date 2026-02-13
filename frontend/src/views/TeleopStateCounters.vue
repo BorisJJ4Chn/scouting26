@@ -89,14 +89,4 @@ const store = useRobotStateStore()
             ...getButtonPosition('前场运球次数')
         }"
     />
-
-  <CountButton 
-    name="弃球"
-    :style="{ backgroundColor: COLORS.LIME, ...getButtonPosition('弃球') }"
-    :disabled="!(
-      store.getPreLoadEnded
-      && store.hasBall
-    )"
-    @click="handleReleaseBall"
-  />
 </template>
