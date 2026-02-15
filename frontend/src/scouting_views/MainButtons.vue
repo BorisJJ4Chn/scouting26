@@ -1,10 +1,9 @@
 <script setup>
-import { ref, computed, inject, onMounted, onUnmounted } from 'vue'
-import { COLORS, ALLIANCE, STATES } from '../constants.js'
+import { COLORS, STATES } from '../constants.js'
 import { getButtonPosition } from '../utils/ButtonPositionConfig.js'
-import OptionButton from '../components/OptionButton.vue'
 import CountButton from '../components/CountButton.vue'
 import { useRobotStateStore } from '../store/RobotState.js'
+import { request } from '../utils/request.js'
 
 // 获取 store
 const store = useRobotStateStore()
@@ -17,7 +16,22 @@ const handleOut = () => {
   store.setIsInState(false)
 }
 
-const handleReleaseBall = () => {
+const handleReleaseBall = (position) => {
+  let EngName = {
+    'Hub下': 'below_hub',
+    '线下': 'near_line',
+    '靠塔': 'near_tower',
+    '任意': 'other',
+  }
+  request.post('/api/count-button', {
+    timestamp: store.timer.getTime(),
+    type: 'release_ball',
+    position: EngName[position],
+    moving: '跑打' in store.groupActive.selectedOptions,
+    defended: '被防守' in store.groupActive.selectedOptions,
+  }).catch((err) => {
+    console.error(err)
+  })
   store.manager.deselectOptions('groupActive', store.groupActive.selectedOptions.slice())
 }
 
@@ -30,16 +44,19 @@ const handleReleaseBall = () => {
     :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('吸中场') }"
     :disabled="!(store.getPreLoadEnded && !store.isInState)"
     @click="store.setFromMid(true)"
+    :attachment="{ type: 'collect_ball', position: 'mid' }"
   />
   <CountButton 
     name="吸DEPOT"
     :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('吸DEPOT') }"
     :disabled="!(store.getPreLoadEnded && store.isInState)"
+    :attachment="{ type: 'collect_ball', position: 'depot' }"
   />
   <CountButton 
     name="吸OUTPOST"
     :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('吸OUTPOST') }"
     :disabled="!(store.getPreLoadEnded && store.isInState)"
+    :attachment="{ type: 'collect_ball', position: 'outpost' }"
   />
 
   <!-- 第四组 -->
@@ -48,24 +65,28 @@ const handleReleaseBall = () => {
     :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('出程：洞') }"
     @click="handleOut"
     :disabled="!(store.getPreLoadEnded && store.isInState)"
+    :attachment="{ type: 'shuttle', direction: 'out', position: 'trench' }"
   />
   <CountButton 
     name="回程：洞"
     :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('回程：洞') }"
     @click="handleBack"
     :disabled="!(store.getPreLoadEnded && !store.isInState)"
+    :attachment="{ type: 'shuttle', direction: 'back', position: 'trench' }"
   />
   <CountButton 
     name="出程：坡"
     :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('出程：坡') }"
     @click="handleOut"
     :disabled="!(store.getPreLoadEnded && store.isInState)"
+    :attachment="{ type: 'shuttle', direction: 'out', position: 'bump' }"
   />
   <CountButton 
     name="回程：坡"
     :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('回程：坡') }"
     @click="handleBack"
     :disabled="!(store.getPreLoadEnded && !store.isInState)"
+    :attachment="{ type: 'shuttle', direction: 'back', position: 'bump' }"
   />
 
   <!-- 第六组 -->
@@ -73,6 +94,7 @@ const handleReleaseBall = () => {
     name="撞车"
     :style="{ backgroundColor: COLORS.VIOLET, ...getButtonPosition('撞车') }"
     :disabled="!(!store.isInState && store.getPreLoadEnded)"
+    :attachment="{ type: 'collision' }"
   />
 
   <!-- 第八组 -->
@@ -85,6 +107,7 @@ const handleReleaseBall = () => {
       && store.currentState !== STATES.INACTIVE
     )"
     @click="handleReleaseBall"
+    :required="false"
   />
 
   <CountButton 
@@ -96,6 +119,7 @@ const handleReleaseBall = () => {
       && store.currentState !== STATES.INACTIVE
     )"
     @click="handleReleaseBall"
+    :required="false"
   />
 
   <CountButton 
@@ -107,6 +131,7 @@ const handleReleaseBall = () => {
       && store.currentState !== STATES.INACTIVE
     )"
     @click="handleReleaseBall"
+    :required="false"
   />
 
   <CountButton 
@@ -118,5 +143,6 @@ const handleReleaseBall = () => {
       && store.currentState !== STATES.INACTIVE
     )"
     @click="handleReleaseBall"
+    :required="false"
   />
 </template>

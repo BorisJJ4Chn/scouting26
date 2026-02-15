@@ -1,6 +1,7 @@
 <script setup>
 import { useRobotStateStore } from '../store/RobotState.js'
 import { ref } from 'vue'
+import { request } from '../utils/request.js'
 
 // 获取 store
 const store = useRobotStateStore()
@@ -19,6 +20,15 @@ const props = defineProps({
   style: {
     type: Object,
     default: () => ({})
+  },
+  attachment: {
+    type: Object,
+    default: () => ({})
+  },
+  // 按钮是否需要
+  required: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -30,20 +40,20 @@ const handleClick = () => {
   // 获取当前时间
   const currentTime = store.timer.getTime()
   
-  // 向控制台输出当前时间和按钮名称
-  console.log(`[CountButton] ${props.name}: ${currentTime} ms`)
+  // 向控制台输出当前时间和按钮名称 如果按钮需要
+  if (props.required) {
+    console.log(`[CountButton] ${props.name}: ${currentTime} ms`)
+    // 发送请求
+    request.post('/api/count-button', {
+      timestamp: currentTime,
+      ...props.attachment
+    }).catch((err) => {
+      console.error(err)
+    })
+  }
   
   // 触发点击事件
   emit('click', { name: props.name, time: currentTime })
-  
-  // 点击后失去焦点
-  if (buttonRef.value) {
-    setTimeout(() => {
-      if (buttonRef.value) {
-        buttonRef.value.blur()
-      }
-    }, 400)
-  }
 }
 </script>
 

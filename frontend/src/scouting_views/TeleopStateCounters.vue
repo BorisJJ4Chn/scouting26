@@ -1,11 +1,6 @@
 <script setup>
 import CounterBar from '../components/CounterBar.vue'
 import { getButtonPosition } from '../utils/ButtonPositionConfig.js'
-import CountButton from '../components/CountButton.vue'
-import { COLORS } from '../constants.js'
-import { useRobotStateStore } from '../store/RobotState.js'
-
-const store = useRobotStateStore()
 </script>
 
 <template>

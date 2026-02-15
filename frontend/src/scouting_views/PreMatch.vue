@@ -4,6 +4,8 @@ import { getButtonPosition } from '../utils/ButtonPositionConfig'
 import OptionButton from '../components/OptionButton.vue'
 import CountButton from '../components/CountButton.vue'
 import { useRobotStateStore } from '../store/RobotState'
+import { request } from '../utils/request'
+
 
 const store = useRobotStateStore()
 
@@ -23,6 +25,26 @@ const platformGroup = optionButtonManager.createGroupIfNotExist('platformGroup',
 
 // 创建位置分组
 const positionGroup = optionButtonManager.createGroupIfNotExist('positionGroup', 1)
+
+const PostPreMatch = async () => {
+  store.toggleState()
+  let EngName = {
+    '左台': 'left',
+    '中台': 'mid',
+    '右台': 'right',
+    '左洞': 'left_trench',
+    '左坡': 'left_bump',
+    'Hub': 'hub',
+    '右坡': 'right_bump',
+    '右洞': 'right_trench',
+  }
+  request.post('/api/pre_match', {
+    operator_platform: EngName[platformGroup.selectedOptions[0]],
+    start_position: EngName[positionGroup.selectedOptions[0]],
+  }).catch((err) => {
+    console.error(err)
+  })
+}
 
 
 </script>
@@ -81,9 +103,10 @@ const positionGroup = optionButtonManager.createGroupIfNotExist('positionGroup',
   <!-- 确认按钮 -->
   <CountButton 
     name="确认"
-    @click="store.toggleState()"
+    @click="PostPreMatch"
     :disabled="!platformGroup.selected() || !positionGroup.selected()"
     :style="{ backgroundColor: COLORS.YELLOW, ...getButtonPosition('confirm') }"
+    :required="false"
   >
   </CountButton>
 </template>

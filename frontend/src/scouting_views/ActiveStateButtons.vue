@@ -13,6 +13,7 @@ const store = useRobotStateStore()
     name="放弃"
     :style="{ backgroundColor: COLORS.GREEN, ...getButtonPosition('放弃') }"
     @click="store.manager.deselectOptions('groupActive', store.groupActive.selectedOptions.slice())"
+    :attachment="{type: 'give up'}"
   />
 
   <OptionButton 

@@ -1,7 +1,8 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import CountButton from './CountButton.vue'
 import { COLORS } from '../constants.js'
+import { useRobotStateStore } from '../store/RobotState.js'
 
 // 定义组件 props
 const props = defineProps({
@@ -37,30 +38,30 @@ const props = defineProps({
   }
 })
 
-// 计数器值
-const count = ref(props.initial)
+// 获取 store
+const store = useRobotStateStore()
 
 // 计算属性：是否可以减少
 const canDecrease = computed(() => {
-  return count.value > props.min
+  return store.counters[props.label] > props.min
 })
 
 // 计算属性：是否可以增加
 const canIncrease = computed(() => {
-  return count.value < props.max
+  return store.counters[props.label] < props.max
 })
 
 // 减少计数
 const handleDecrease = () => {
   if (canDecrease.value) {
-    count.value -= props.step
+    store.counters[props.label] -= props.step
   }
 }
 
 // 增加计数
 const handleIncrease = () => {
   if (canIncrease.value) {
-    count.value += props.step
+    store.counters[props.label] += props.step
   }
 }
 
@@ -80,6 +81,7 @@ const handleIncrease = () => {
         margin: 0,
         borderRadius: '1vw 0 0 1vw'
       }"
+      :required="false"
       @click="handleDecrease"
       :disabled="!canDecrease"
     />
@@ -87,10 +89,11 @@ const handleIncrease = () => {
     <!-- 中间信息展示栏 -->
     <div class="counter-bar-text" >
       <template v-if="label">
-        {{ label }}: {{ count }}
+        {{ label }}: {{ store.counters[props.label] }}
       </template>
       <template v-else>
-        {{ count }}
+        {{ store.counters[props.label] }}
+
       </template>
     </div>
     
@@ -106,6 +109,7 @@ const handleIncrease = () => {
         margin: 0,
         borderRadius: '0 1vw 1vw 0'
       }"
+      :required="false"
       @click="handleIncrease"
       :disabled="!canIncrease"
     />

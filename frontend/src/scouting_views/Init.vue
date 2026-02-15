@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue'
 import { COLORS, ALLIANCE } from '../constants'
 import { useRobotStateStore } from '../store/RobotState'
+import { request } from '../utils/request'
 
 const teamNumber = ref('')
 const alliance = ref('')
@@ -13,6 +14,24 @@ const store = useRobotStateStore()
 watch(alliance, (newValue) => {
   store.alliance = newValue
 })
+
+const PostInit = async () => {
+  store.toggleState()
+
+  let EngName = {
+    '资格赛': 'Qualification',
+    '淘汰赛': 'Playoff',
+  }
+  
+  request.post('/api/init', {
+    team_number: teamNumber.value,
+    alliance: alliance.value,
+    match_type: EngName[matchType.value],
+    match_number: matchNumber.value,
+  }).catch((err) => {
+    console.error(err)
+  })
+}
 
 </script>
 
@@ -82,7 +101,7 @@ watch(alliance, (newValue) => {
     </div>
     <button
       class="confirm-button"
-      @click="store.toggleState()"
+      @click="PostInit()"
       :disabled="!teamNumber || !alliance || !matchType || !matchNumber"
     >
       确认

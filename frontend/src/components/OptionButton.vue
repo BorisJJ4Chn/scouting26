@@ -61,15 +61,6 @@ const handleClick = () => {
       emit('select', props.name)
     }
   }
-  
-  // 点击后失去焦点
-  if (buttonRef.value) {
-    setTimeout(() => {
-      if (buttonRef.value) {
-        buttonRef.value.blur()
-      }
-    }, 100)
-  }
 }
 
 // 暴露方法给父组件

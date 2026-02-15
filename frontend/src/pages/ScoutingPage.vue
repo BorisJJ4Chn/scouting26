@@ -1,23 +1,33 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import Init from '../views/Init.vue'
-import PreMatch from '../views/PreMatch.vue'
-import BeforeStart from '../views/BeforeStart.vue'
-import AutoState from '../views/AutoStateButtons.vue'
-import MainButtons from '../views/MainButtons.vue'
-import TimerAndState from '../views/TimerAndState.vue'
-import ActiveStateButtons from '../views/ActiveStateButtons.vue'
-import ClimbPositionButtons from '../views/ClimbPositionButtons.vue'
-import ClimbUpButtons from '../views/ClimbUpButtons.vue'
-import TeleopStateCounters from '../views/TeleopStateCounters.vue'
+import Init from '../scouting_views/Init.vue'
+import PreMatch from '../scouting_views/PreMatch.vue'
+import BeforeStart from '../scouting_views/BeforeStart.vue'
+import AutoState from '../scouting_views/AutoStateButtons.vue'
+import MainButtons from '../scouting_views/MainButtons.vue'
+import TimerAndState from '../scouting_views/TimerAndState.vue'
+import ActiveStateButtons from '../scouting_views/ActiveStateButtons.vue'
+import ClimbPositionButtons from '../scouting_views/ClimbPositionButtons.vue'
+import ClimbUpButtons from '../scouting_views/ClimbUpButtons.vue'
+import TeleopStateCounters from '../scouting_views/TeleopStateCounters.vue'
 import { ALLIANCE, STATES } from '../constants.js'
 import { useRobotStateStore } from '../store/RobotState.js'
-import AskTransition from '../views/AskTransition.vue'
+import AskTransition from '../scouting_views/AskTransition.vue'
 
 const containerSize = ref({ width: 0, height: 0 })
 
 const store = useRobotStateStore()
 store.createOptionButtonGroups()
+store.createCounters([
+  '推球回家次数',
+  '推球进outpost次数',
+  '阻挡路线/pin次数',
+  '冲撞射球次数',
+  '普通犯规次数',
+  '技术犯规次数',
+  '中场运球次数',
+  '前场运球次数',
+])
 
 const backgroundImage = computed(() => {
   return store.alliance === ALLIANCE.RED ? './red.png' : './blue.png'

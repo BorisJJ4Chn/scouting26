@@ -38,10 +38,12 @@ const remainingCount = computed(() => {
       name="是"
       :style="{ backgroundColor: getAllianceColor(store.alliance), ...getButtonPosition(store.alliance + '-Hub闪烁'), fontSize: '5vw' }"
       @click="store.updateWinner(store.alliance)"
+      :required="false"
   />
   <CountButton 
       name="否"
       :style="{ backgroundColor: getAllianceColor(anotherAlliance), ...getButtonPosition(anotherAlliance + '-Hub闪烁'), fontSize: '5vw' }"
       @click="store.updateWinner(anotherAlliance)"
+      :required="false"
   />
 </template>
