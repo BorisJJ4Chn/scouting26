@@ -31,6 +31,9 @@ export const useRobotStateStore = defineStore('robot', {
             groupActive: null,
             groupAccuracy: null,
             groupClimbHeight: null,
+
+            // timeAxis
+            triggeredButtons: [],
         }
     },
     getters: {
@@ -143,8 +146,8 @@ export const useRobotStateStore = defineStore('robot', {
                     console.error(err)
                 })
 
-                router.push('/')
                 this.resetAll();
+                router.push('/')
             }
         },
 
@@ -173,7 +176,7 @@ export const useRobotStateStore = defineStore('robot', {
         setIsInState(value) {
             this.isInState = value
             if (this.isInState) {
-                if (this.currentState === STATES.AUTO) {
+                if (this.currentState === STATES.AUTO && this.groupMidPosition.selected()) {
                     let EngName = {
                         '中切': 'mid',
                         '边切': 'edge',
@@ -243,6 +246,9 @@ export const useRobotStateStore = defineStore('robot', {
             this.groupActive = null
             this.groupAccuracy = null
             this.groupClimbHeight = null
+
+            // timeAxis
+            this.triggeredButtons = []
         }
     }
 })

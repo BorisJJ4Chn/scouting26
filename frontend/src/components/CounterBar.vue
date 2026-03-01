@@ -82,6 +82,7 @@ const handleIncrease = () => {
         borderRadius: '1vw 0 0 1vw'
       }"
       :required="false"
+      :show-in-timer="false"
       @click="handleDecrease"
       :disabled="!canDecrease"
     />
@@ -110,6 +111,7 @@ const handleIncrease = () => {
         borderRadius: '0 1vw 1vw 0'
       }"
       :required="false"
+      :show-in-timer="false"
       @click="handleIncrease"
       :disabled="!canIncrease"
     />

@@ -17,17 +17,6 @@ import AskTransition from '../scouting_views/AskTransition.vue'
 const containerSize = ref({ width: 0, height: 0 })
 
 const store = useRobotStateStore()
-store.createOptionButtonGroups()
-store.createCounters([
-  '推球回家次数',
-  '推球进outpost次数',
-  '阻挡路线/pin次数',
-  '冲撞射球次数',
-  '普通犯规次数',
-  '技术犯规次数',
-  '中场运球次数',
-  '前场运球次数',
-])
 
 const backgroundImage = computed(() => {
   return store.alliance === ALLIANCE.RED ? './red.png' : './blue.png'
@@ -66,6 +55,16 @@ onMounted(() => {
   updateContainerSize()
   window.addEventListener('resize', updateContainerSize)
   store.createOptionButtonGroups()
+  store.createCounters([
+    '推球回家次数',
+    '推球进outpost次数',
+    '阻挡路线/pin次数',
+    '冲撞射球次数',
+    '普通犯规次数',
+    '技术犯规次数',
+    '中场运球次数',
+    '前场运球次数',
+  ])
 })
 </script>
 
@@ -187,26 +186,6 @@ onMounted(() => {
 </style>
 
 <style>
-/* 全局样式 */
-body {
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: #000;
-}
-
-/* 确保容器在父元素中居中 */
-#app {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-
 .m-global-button {
   position: absolute;
   border: none;
@@ -223,16 +202,34 @@ body {
   word-wrap: break-word;
 }
 
-.m-global-button:hover:not(:disabled, .disabled, .active) {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  opacity: 0.9;
+@media(hover: hover) {
+  .m-global-button:hover:not(:disabled, .disabled, .active) {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    opacity: 0.9;
+  }
+  .m-global-button:active:not(:disabled, .disabled) {
+    border: 2px solid #fff;
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+    transform: scale(0.95);
+  }
 }
 
-.m-global-button:active:not(:disabled, .disabled) {
-  border: 2px solid #fff;
-  box-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
-  transform: scale(0.95);
+@media(hover: none) {
+  .m-global-button:active:not(:disabled, .disabled, .active) {
+    transform: scale(0.95);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    opacity: 0.9;
+  }
+  .m-global-button:hover:not(:disabled, .disabled, .active) {
+    border: 2px solid #fff;
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+    transform: scale(1.05);
+  }
+  .m-global-button.no-hover:hover:not(:disabled, .disabled) {
+    border: none;
+    transform: scale(1);
+  }
 }
 
 .m-global-button.active {

@@ -5,6 +5,7 @@ export const COLORS = {
   GREEN: '#00ce30',
   CYAN: '#00bedf',
   VIOLET: '#9400d3',
+  LILAC: '#c8a2c8',
   PINK: '#ff69b4',
   AMBER: '#ff9900',
   LIME: '#93b703',

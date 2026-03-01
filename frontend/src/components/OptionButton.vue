@@ -33,12 +33,9 @@ const props = defineProps({
 // 定义组件事件
 const emit = defineEmits(['select', 'deselect'])
 
-// 获取全局选项按钮组实例
-const optionButtonGroupManager = store.manager
-
 // 计算属性，用于响应式更新选中状态
 const isSelected = computed(() => {
-  return optionButtonGroupManager.getGroup(props.groupName).getIfSelected(props.name)
+  return store.manager.getGroup(props.groupName).getIfSelected(props.name)
 })
 
 // 按钮点击事件处理
@@ -50,23 +47,24 @@ const handleClick = () => {
     }
 
     // 取消选择
-    const success = optionButtonGroupManager.deselectOption(props.groupName, props.name)
+    const success = store.manager.deselectOption(props.groupName, props.name)
     if (success) {
       emit('deselect', props.name)
     }
   } else {
     // 选择
-    const success = optionButtonGroupManager.selectOption(props.groupName, props.name)
+    const success = store.manager.selectOption(props.groupName, props.name)
     if (success) {
       emit('select', props.name)
     }
+
+    buttonRef.value.classList.remove('no-hover')
+    setTimeout(() => {
+      buttonRef.value.classList.add('no-hover')
+      buttonRef.value.blur()
+    }, 300)
   }
 }
-
-// 暴露方法给父组件
-defineExpose({
-  isSelected: () => selected.value
-})
 
 // 组件挂载时初始化
 onMounted(() => {})
@@ -75,7 +73,7 @@ onMounted(() => {})
 onUnmounted(() => {
   // 如果按钮被选中，从分组中移除
   if (isSelected.value) {
-    optionButtonGroupManager.deselectOption(props.groupName, props.name)
+    store.manager.deselectOption(props.groupName, props.name)
   }
 })
 </script>
@@ -91,3 +89,13 @@ onUnmounted(() => {
     {{ name }}
   </button>
 </template>
+
+<style scoped>
+@media(hover: none) {
+  .m-global-button:not(.active) {
+    border: none !important;
+    transform: scale(1);
+    box-shadow: none !important;
+  }
+}
+</style>

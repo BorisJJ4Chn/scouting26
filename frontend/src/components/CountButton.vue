@@ -29,6 +29,10 @@ const props = defineProps({
   required: {
     type: Boolean,
     default: true
+  },
+  showInTimer: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -39,10 +43,17 @@ const emit = defineEmits(['click'])
 const handleClick = () => {
   // 获取当前时间
   const currentTime = store.timer.getTime()
+
+  if (props.showInTimer) {
+    store.triggeredButtons.push({
+      name: props.name,
+      time: currentTime,
+      backgroundColor: window.getComputedStyle(buttonRef.value).backgroundColor
+    })
+  }
   
   // 向控制台输出当前时间和按钮名称 如果按钮需要
   if (props.required) {
-    console.log(`[CountButton] ${props.name}: ${currentTime} ms`)
     // 发送请求
     request.post('/api/count-button', {
       timestamp: currentTime,
@@ -51,10 +62,16 @@ const handleClick = () => {
       console.error(err)
     })
   }
+  buttonRef.value.classList.remove('no-hover')
+  setTimeout(() => {
+    buttonRef.value.classList.add('no-hover')
+    buttonRef.value.blur()
+  }, 300)
   
   // 触发点击事件
   emit('click', { name: props.name, time: currentTime })
 }
+
 </script>
 
 <template>
@@ -62,7 +79,7 @@ const handleClick = () => {
     ref="buttonRef"
     class="m-global-button"
     :style="style"
-    style="box-shadow: 0 0 0.3vw rgba(255, 215, 0, 0.5), 0 0 0.8vw rgba(255, 215, 0, 0.3);"
+    style="border: 0.3vw solid #FFD700;"
     @click="handleClick"
   >
     {{ name }}

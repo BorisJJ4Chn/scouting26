@@ -4,6 +4,7 @@ import { COLORS, ALLIANCE } from '../constants'
 import { useRobotStateStore } from '../store/RobotState'
 import { request } from '../utils/request'
 
+const region = ref('')
 const teamNumber = ref('')
 const alliance = ref('')
 const matchType = ref('')
@@ -28,6 +29,7 @@ const PostInit = async () => {
     alliance: alliance.value,
     match_type: EngName[matchType.value],
     match_number: matchNumber.value,
+    region: region.value,
   }).catch((err) => {
     console.error(err)
   })
@@ -37,12 +39,22 @@ const PostInit = async () => {
 
 <template>
   <div class="init-container">
+    <div class="region-input">
+      <select
+        v-model="region"
+        class="region-input-field"
+      >
+        <option disabled selected hidden value="">请选择赛区</option>
+        <option class="region-option" value="RPH">RPH</option>
+      </select>
+    </div>
     <div class="team-input">
       <input 
         type="number" 
         v-model="teamNumber" 
         class="team-input-field"
         placeholder="队号"
+        autocomplete="off"
       />
     </div>
     <div class="alliance-selector">
@@ -96,13 +108,14 @@ const PostInit = async () => {
           v-model="matchNumber" 
           class="match-number-field"
           placeholder="场次号"
+          autocomplete="off"
         />
       </div>
     </div>
     <button
       class="confirm-button"
       @click="PostInit()"
-      :disabled="!teamNumber || !alliance || !matchType || !matchNumber"
+      :disabled="!teamNumber || !alliance || !matchType || !matchNumber || !region"
     >
       确认
     </button>
@@ -114,11 +127,32 @@ const PostInit = async () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2vw;
-  padding: 2vw;
+  gap: 1.5vw;
+  padding: 1.5vw;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 1vw;
   backdrop-filter: blur(10px);
+}
+
+.region-input {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.region-input-field {
+  width: 100%;
+  padding: 1.5vw;
+  font-size: 1.5vw;
+  border: 0.3vw solid #333;
+  border-radius: 0.5vw;
+  text-align: center;
+}
+
+.region-option {
+  font-size: 1.5vw;
+  text-align: center;
+  padding: 1.5vw;
 }
 
 .team-input {
@@ -130,7 +164,7 @@ const PostInit = async () => {
 .team-input-field {
   width: 100%;
   padding: 1.5vw;
-  font-size: 2vw;
+  font-size: 1.5vw;
   border: 0.3vw solid #333;
   border-radius: 0.5vw;
   text-align: center;
@@ -161,8 +195,8 @@ const PostInit = async () => {
 
 .alliance-label {
   display: block;
-  width: 8vw;
-  height: 8vw;
+  width: 6vw;
+  height: 6vw;
   border: none;
   border-radius: 0.5vw;
   position: relative;

@@ -107,6 +107,7 @@ const PostPreMatch = async () => {
     :disabled="!platformGroup.selected() || !positionGroup.selected()"
     :style="{ backgroundColor: COLORS.YELLOW, ...getButtonPosition('confirm') }"
     :required="false"
+    :showInTimer="false"
   >
   </CountButton>
 </template>

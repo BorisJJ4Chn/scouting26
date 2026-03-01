@@ -27,6 +27,8 @@ html,
 body {
   margin: 0;
   padding: 0;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden !important;
@@ -69,19 +71,4 @@ button:focus-visible {
   margin: 0;
   padding: 0;
   text-align: center;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
 }

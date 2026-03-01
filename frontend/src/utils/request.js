@@ -8,6 +8,20 @@ const axiosInstance = axios.create({
   timeout: 10000,
 })
 
+// 请求拦截器，自动添加认证token
+axiosInstance.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  error => {
+    return Promise.reject(error)
+  }
+)
+
 const createRetryWrapper = (method) => {
   return async (...args) => {
     let lastError
@@ -20,6 +34,10 @@ const createRetryWrapper = (method) => {
         lastError = error
 
         if (attempt === MAX_RETRY) {
+          break
+        }
+
+        if (error.response?.status < 500) {
           break
         }
 

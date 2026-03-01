@@ -1,10 +1,12 @@
 from flask import Blueprint, request, jsonify
-from data import g_data
+from data import g_datas
+from auth import login_required
 
 unique_bp = Blueprint('unique', __name__)
 
 @unique_bp.route('/init', methods=['POST'])
-def unique_init():
+@login_required
+def unique_init(username):
     """
     字段:
         - team_number: 队伍编号
@@ -13,7 +15,8 @@ def unique_init():
         - match_number: 比赛编号
     """
     data: dict[str, str | int | bool] = request.get_json()
-    g_data.setInit(data)
+    data['recorder'] = username
+    g_datas[username].setInit(data)
 
     return jsonify({
         'code': 200,
@@ -21,14 +24,15 @@ def unique_init():
         }), 200
 
 @unique_bp.route('/pre_match', methods=['POST'])
-def unique_pre_match():
+@login_required
+def unique_pre_match(username):
     """
     字段:
         - platform: 操作台位置
         - position: 起步位置
     """
     data: dict[str, str | int | bool] = request.get_json()
-    g_data.setPreMatch(data)
+    g_datas[username].setPreMatch(data)
 
     return jsonify({
         'code': 200,

@@ -19,7 +19,7 @@ const handleOut = () => {
 const handleReleaseBall = (position) => {
   let EngName = {
     'Hub下': 'below_hub',
-    '线下': 'near_line',
+    '线后': 'near_line',
     '靠塔': 'near_tower',
     '任意': 'other',
   }
@@ -39,11 +39,10 @@ const handleReleaseBall = (position) => {
 
 <template>
   <!-- 第三组 -->
-  <CountButton 
+  <CountButton v-if="store.currentState !== STATES.AUTO"
     name="吸中场"
     :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('吸中场') }"
     :disabled="!(store.getPreLoadEnded && !store.isInState)"
-    @click="store.setFromMid(true)"
     :attachment="{ type: 'collect_ball', position: 'mid' }"
   />
   <CountButton 
@@ -62,39 +61,59 @@ const handleReleaseBall = (position) => {
   <!-- 第四组 -->
   <CountButton 
     name="出程：洞"
-    :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('出程：洞') }"
+    :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('出程：洞1') }"
+    @click="handleOut"
+    :disabled="!(store.getPreLoadEnded && store.isInState)"
+    :attachment="{ type: 'shuttle', direction: 'out', position: 'trench' }"
+  />
+  <CountButton 
+    name="出程：洞"
+    :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('出程：洞2') }"
     @click="handleOut"
     :disabled="!(store.getPreLoadEnded && store.isInState)"
     :attachment="{ type: 'shuttle', direction: 'out', position: 'trench' }"
   />
   <CountButton 
     name="回程：洞"
-    :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('回程：洞') }"
+    :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('回程：洞1') }"
+    @click="handleBack"
+    :disabled="!(store.getPreLoadEnded && !store.isInState)"
+    :attachment="{ type: 'shuttle', direction: 'back', position: 'trench' }"
+  />
+  <CountButton 
+    name="回程：洞"
+    :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('回程：洞2') }"
     @click="handleBack"
     :disabled="!(store.getPreLoadEnded && !store.isInState)"
     :attachment="{ type: 'shuttle', direction: 'back', position: 'trench' }"
   />
   <CountButton 
     name="出程：坡"
-    :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('出程：坡') }"
+    :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('出程：坡1') }"
+    @click="handleOut"
+    :disabled="!(store.getPreLoadEnded && store.isInState)"
+    :attachment="{ type: 'shuttle', direction: 'out', position: 'bump' }"
+  />
+  <CountButton 
+    name="出程：坡"
+    :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('出程：坡2') }"
     @click="handleOut"
     :disabled="!(store.getPreLoadEnded && store.isInState)"
     :attachment="{ type: 'shuttle', direction: 'out', position: 'bump' }"
   />
   <CountButton 
     name="回程：坡"
-    :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('回程：坡') }"
+    :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('回程：坡1') }"
     @click="handleBack"
     :disabled="!(store.getPreLoadEnded && !store.isInState)"
     :attachment="{ type: 'shuttle', direction: 'back', position: 'bump' }"
   />
-
-  <!-- 第六组 -->
   <CountButton 
-    name="撞车"
-    :style="{ backgroundColor: COLORS.VIOLET, ...getButtonPosition('撞车') }"
-    :disabled="!(!store.isInState && store.getPreLoadEnded)"
-    :attachment="{ type: 'collision' }"
+    name="回程：坡"
+    :style="{ backgroundColor: COLORS.PINK, ...getButtonPosition('回程：坡2') }"
+    @click="handleBack"
+    :disabled="!(store.getPreLoadEnded && !store.isInState)"
+    :attachment="{ type: 'shuttle', direction: 'back', position: 'bump' }"
   />
 
   <!-- 第八组 -->
@@ -106,19 +125,31 @@ const handleReleaseBall = (position) => {
       && store.isInState
       && store.currentState !== STATES.INACTIVE
     )"
-    @click="handleReleaseBall"
+    @click="handleReleaseBall('Hub下')"
     :required="false"
   />
 
   <CountButton 
     name="线后"
-    :style="{ backgroundColor: COLORS.LIME, ...getButtonPosition('线后') }"
+    :style="{ backgroundColor: COLORS.LIME, ...getButtonPosition('线后1') }"
     :disabled="!(
       store.getPreLoadEnded
       && store.isInState
       && store.currentState !== STATES.INACTIVE
     )"
-    @click="handleReleaseBall"
+    @click="handleReleaseBall('线后')"
+    :required="false"
+  />
+
+  <CountButton 
+    name="线后"
+    :style="{ backgroundColor: COLORS.LIME, ...getButtonPosition('线后2') }"
+    :disabled="!(
+      store.getPreLoadEnded
+      && store.isInState
+      && store.currentState !== STATES.INACTIVE
+    )"
+    @click="handleReleaseBall('线后')"
     :required="false"
   />
 
@@ -130,19 +161,31 @@ const handleReleaseBall = (position) => {
       && store.isInState
       && store.currentState !== STATES.INACTIVE
     )"
-    @click="handleReleaseBall"
+    @click="handleReleaseBall('靠塔')"
     :required="false"
   />
 
   <CountButton 
     name="任意"
-    :style="{ backgroundColor: COLORS.LIME, ...getButtonPosition('任意') }"
+    :style="{ backgroundColor: COLORS.LIME, ...getButtonPosition('任意1') }"
     :disabled="!(
       store.getPreLoadEnded
       && store.isInState
       && store.currentState !== STATES.INACTIVE
     )"
-    @click="handleReleaseBall"
+    @click="handleReleaseBall('任意')"
+    :required="false"
+  />
+
+  <CountButton 
+    name="任意"
+    :style="{ backgroundColor: COLORS.LIME, ...getButtonPosition('任意2') }"
+    :disabled="!(
+      store.getPreLoadEnded
+      && store.isInState
+      && store.currentState !== STATES.INACTIVE
+    )"
+    @click="handleReleaseBall('任意')"
     :required="false"
   />
 </template>

@@ -62,9 +62,21 @@ onUnmounted(() => {
   <!-- 计时器显示 -->
   <div
     class="m-global-button"
-    :style="{ ...getButtonPosition('计时器'), fontSize: '1vw', backgroundColor: COLORS.BLACK_TRANSPARENT }"
+    :style="{ ...getButtonPosition('计时器'), fontSize: '1vw', backgroundColor: COLORS.BLACK_TRANSPARENT, overflow: 'hidden' }"
     @click="store.timer.togglePause"
   >
     {{ displayTime.toFixed(2) }} s
+    <div
+      v-for="button of store.triggeredButtons"
+      :key="button.time"
+      :style="{
+        position: 'absolute',
+        top: '0%',
+        bottom: '0%',
+        left: (100 - (store.timer.getTime() - button.time) / 1000.0 * 100) + '%',
+        width: '0.4vw',
+        backgroundColor: button.backgroundColor,
+      }"
+    ></div>
   </div>
 </template>

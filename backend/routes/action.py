@@ -1,10 +1,13 @@
 from flask import Blueprint, request, jsonify
-from data import g_data
+from data import g_datas
+from auth import login_required
+
 
 action_bp = Blueprint('action', __name__)
 
 @action_bp.route('/count-button', methods=['POST'])
-def action_count_button():
+@login_required
+def action_count_button(username):
     """
     字段:
         - timestamp: 时间戳
@@ -12,7 +15,7 @@ def action_count_button():
         - **attachment: 附加属性
     """
     data: dict[str, str | int | bool] = request.get_json()
-    g_data.fromCountButton(data)
+    g_datas[username].fromCountButton(data)
     return jsonify({
         'code': 200,
         'message': 'Success'
