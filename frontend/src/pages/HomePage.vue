@@ -4,6 +4,7 @@ import { request } from '../utils/request'
 
 const logout = () => {
   localStorage.removeItem('token')
+  localStorage.removeItem('username')
 }
 
 const role = ref('未登录')

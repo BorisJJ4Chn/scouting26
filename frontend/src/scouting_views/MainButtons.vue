@@ -46,6 +46,12 @@ const handleReleaseBall = (position) => {
     :attachment="{ type: 'collect_ball', position: 'mid' }"
   />
   <CountButton 
+    name="吸任意"
+    :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('吸任意') }"
+    :disabled="!(store.getPreLoadEnded && store.isInState)"
+    :attachment="{ type: 'collect_ball', position: 'other' }"
+  />
+  <CountButton 
     name="吸DEPOT"
     :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('吸DEPOT') }"
     :disabled="!(store.getPreLoadEnded && store.isInState)"

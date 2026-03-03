@@ -21,7 +21,7 @@ const PostInit = async () => {
 
   let EngName = {
     '资格赛': 'Qualification',
-    '淘汰赛': 'Playoff',
+    '淘汰赛': 'Elimination',
   }
   
   request.post('/api/init', {

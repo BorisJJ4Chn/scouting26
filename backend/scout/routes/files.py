@@ -146,7 +146,7 @@ def download_file(username, path):
             }), 404
     if os.path.isdir(path):
         zip_filename = f'{path.split("/")[-1]}.zip'
-        zip_path = os.path.join('.', 'data', 'tempzip')
+        zip_path = os.path.join('.', 'data', '._tempzip')
         os.makedirs(zip_path, exist_ok=True)
         with zipfile.ZipFile(os.path.join(zip_path, zip_filename), 'w', zipfile.ZIP_DEFLATED) as zipf:
             for root, dirs, files in os.walk(path):

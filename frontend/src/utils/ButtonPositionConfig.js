@@ -21,6 +21,7 @@ export const positions = {
         '失败': { top: '58%', bottom: '36%', left: '3%', right: '87%' },
 
         '吸中场': { top: '10%', bottom: '84%', left: '74%', right: '16%' },
+        '吸任意': { top: '36%', bottom: '58%', left: '30%', right: '60%' },
         '吸DEPOT': { top: '26%', bottom: '68%', left: '21%', right: '69%' },
         '吸OUTPOST': { top: '84%', bottom: '10%', left: '16%', right: '74%' },
 
@@ -96,6 +97,7 @@ export const positions = {
         '失败': { top: '44%', bottom: '50%', left: '86%', right: '4%' },
 
         '吸中场': { top: '10%', bottom: '84%', left: '26%', right: '64%' },
+        '吸任意': { top: '34%', bottom: '60%', left: '56%', right: '34%' },
         '吸DEPOT': { top: '68%', bottom: '26%', left: '70%', right: '20%' },
         '吸OUTPOST': { top: '10%', bottom: '84%', left: '75%', right: '15%' },
 

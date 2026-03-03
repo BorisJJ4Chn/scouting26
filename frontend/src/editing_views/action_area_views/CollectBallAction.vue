@@ -37,6 +37,7 @@ onMounted(() => {
             <label class="action-label">位置</label>
             <select class="action-select" v-model="newAction.position">
                 <option class="action-option" value="mid">中场</option>
+                <option class="action-option" value="other">任意</option>
                 <option class="action-option" value="depot">DEPOT</option>
                 <option class="action-option" value="outpost">OUTPOST</option>
             </select>

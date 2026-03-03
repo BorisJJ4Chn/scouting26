@@ -89,11 +89,12 @@ def save_data(username, team_number, region, match_type, match_number):
         'message': 'Success'
         }), 200
 
-
-if __name__ == '__main__':
+with app.app_context():
     with open('./data/users.json', 'r') as f:
         users = json.load(f)['users']
     for user in users:
         g_datas[user['username']] = Data()
     del users
+
+if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=False, port=3000)
