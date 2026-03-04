@@ -1,11 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useEditManagerStore } from '../store/EditManager.js'
 import { request } from '../utils/request'
 
 const router = useRouter()
-const store = useEditManagerStore()
 const currentPath = ref('')
 const items = ref([])
 const isLoading = ref(false)
@@ -58,14 +56,9 @@ const handleItemClick = (item) => {
     }, 300)
   }
   else {
-    console.log(item) 
-    const infos = item.name.split('_')
-    const teamNumber = infos[0]
-    const region = infos[1]
-    const matchType = infos[2][0]
-    const matchNumber = infos[2].substring(1).replace('.json', '')
-
-    request.get(`/api/data/${teamNumber}/${region}/${matchType}/${matchNumber}/${item.owner}`)
+    request.get(`/api/data/${item.owner}/${item.name}`).then(response => {
+      console.log(response)
+    })
     router.push({
       name: 'EditingPage',
     })

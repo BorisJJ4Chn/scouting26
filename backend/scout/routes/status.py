@@ -19,9 +19,9 @@ def status_preload(username):
         'message': 'Success'
         }), 200
 
-@status_bp.route('/climb/<string:which>', methods=['POST'])
+@status_bp.route('/climb', methods=['POST'])
 @login_required
-def status_climb(username, which: str):
+def status_climb(username):
     """
     字段:
         - success: 是否成功
@@ -30,7 +30,8 @@ def status_climb(username, which: str):
         - height: 高度
     """
     data: dict[str, str | int | bool] = request.get_json()
-    g_datas[username].setClimbStatus(data, which)
+    print(data)
+    g_datas[username].fromCountButton(data)
     return jsonify({
         'code': 200,
         'message': 'Success'

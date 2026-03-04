@@ -13,18 +13,18 @@ const store = useRobotStateStore()
         name="高杆"
         groupName="groupClimbHeight"
         :style="{ backgroundColor: COLORS.RED, ...getButtonPosition('高杆') }"
-        :disabled="!(store.isInState && store.climbStarted)"
+        :disabled="!(store.isInState && store.climbStatus !== 'before')"
     />
     <OptionButton 
         name="中杆"
         groupName="groupClimbHeight"
         :style="{ backgroundColor: COLORS.RED, ...getButtonPosition('中杆') }"
-        :disabled="!(store.isInState && store.climbStarted)"
+        :disabled="!(store.isInState && store.climbStatus !== 'before')"
     />
     <OptionButton 
         name="低杆"
         groupName="groupClimbHeight"
         :style="{ backgroundColor: COLORS.RED, ...getButtonPosition('低杆') }"
-        :disabled="!(store.isInState && store.climbStarted)"
+        :disabled="!(store.isInState && store.climbStatus !== 'before')"
     />
 </template>

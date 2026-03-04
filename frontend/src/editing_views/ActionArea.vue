@@ -6,6 +6,7 @@ import ShuttleAction from './action_area_views/ShuttleAction.vue'
 import ReleaseBallAction from './action_area_views/ReleaseBallAction.vue'
 import CollectBallAction from './action_area_views/CollectBallAction.vue'
 import ClimbStartAction from './action_area_views/ClimbStartAction.vue'
+import ClimbEndAction from './action_area_views/ClimbEndAction.vue'
 import GiveUpAction from './action_area_views/GiveUpAction.vue'
 import CollisionAction from './action_area_views/CollisionAction.vue'
 
@@ -18,6 +19,7 @@ const actionsMap = {
     'release_ball': ReleaseBallAction,
     'collect_ball': CollectBallAction,
     'climb_start': ClimbStartAction,
+    'climb_end': ClimbEndAction,
     'give_up': GiveUpAction,
     'collision': CollisionAction,
 }

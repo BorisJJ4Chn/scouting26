@@ -13,7 +13,6 @@ def get_files(username, path):
     if not path.startswith('data/'):
         path = os.path.join('data', path)
     path = path.replace('\\', '/')
-    print(path)
     if not os.path.exists(path):
         return jsonify({
             'code': 404,
@@ -42,9 +41,7 @@ def get_files(username, path):
                 to_append.update({
                     'owner': path.split('/')[-2],
                 } if path.startswith('data/raw/') else {})
-                print(path.split('/'))
                 new_file_list.append(to_append)
-        print(new_file_list)
         return jsonify({
             'code': 200,
             'message': 'Success',
@@ -52,18 +49,12 @@ def get_files(username, path):
         }), 200
     
     if os.path.isdir(path):
-
-        print('='*20)
-
         users = all_users()
         
         file_list = os.listdir(path)
-        print(file_list)
         file_list = [f for f in file_list if not f.startswith('._')]
         file_list = [f for f in file_list if f != "users.json"]
 
-        
-        
         new_file_list = []
         for file_dir_name in file_list[:]:
             if os.path.isdir(os.path.join(path, file_dir_name)):
@@ -93,7 +84,6 @@ def get_files(username, path):
                         'owner': path.split('/')[-2],
                     } if path.startswith('data/raw/') else {})
                     new_file_list.append(to_append)
-        print(new_file_list)
 
         return jsonify({
             'code': 200,
@@ -112,17 +102,23 @@ def delete_file(username, path):
             }), 403
     if not path.startswith('data/'):
         path = os.path.join('data', path)
+    path = os.path.abspath(path)
     path = path.replace('\\', '/')
-    print(path)
     if not os.path.exists(path):
         return jsonify({
             'code': 404,
             'message': 'Path not found'
             }), 404
     try:
-        os.remove(path)
+        def rm(x):
+            if os.path.isdir(x):
+                for f in os.listdir(x):
+                    rm(os.path.join(x, f))
+                os.rmdir(x)
+            else:
+                os.remove(x)
+        rm(path)
     except Exception as e:
-        print(e)
         return jsonify({
             'code': 500,
             'message': 'Internal server error'
@@ -137,8 +133,8 @@ def delete_file(username, path):
 def download_file(username, path):
     if not path.startswith('data/'):
         path = os.path.join('data', path)
+    path = os.path.abspath(path)
     path = path.replace('\\', '/')
-    print(path)
     if not os.path.exists(path):
         return jsonify({
             'code': 404,
@@ -146,7 +142,8 @@ def download_file(username, path):
             }), 404
     if os.path.isdir(path):
         zip_filename = f'{path.split("/")[-1]}.zip'
-        zip_path = os.path.join('.', 'data', '._tempzip')
+        zip_path = os.path.join('data', '._tempzip')
+        zip_path = os.path.abspath(zip_path)
         os.makedirs(zip_path, exist_ok=True)
         with zipfile.ZipFile(os.path.join(zip_path, zip_filename), 'w', zipfile.ZIP_DEFLATED) as zipf:
             for root, dirs, files in os.walk(path):
@@ -161,8 +158,8 @@ def upload_file(username, path):
     
     if not path.startswith('data/'):
         path = os.path.join('data', path)
+    path = os.path.abspath(path)
     path = path.replace('\\', '/')
-    print(path)
     
     # 确保上传目录存在
     os.makedirs(path, exist_ok=True)
@@ -197,7 +194,6 @@ def upload_file(username, path):
             }
             }), 200
     except Exception as e:
-        print(e)
         return jsonify({
             'code': 500,
             'message': 'Internal server error'

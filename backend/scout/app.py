@@ -36,6 +36,7 @@ def over(username):
 
     if not os.path.exists(f'./data/raw/{username}'):
         os.makedirs(f'./data/raw/{username}')
+    g_datas[username]._data['info']['record_date'] = request.json['date']
     g_datas[username].after()
 
     with open(os.path.join(f'./data/raw/{username}', filename), 'w') as f:
@@ -56,25 +57,20 @@ def get_all(username):
         }), 200
 
 
-@app.route('/api/data/<int:team_number>/<region>/<match_type>/<int:match_number>', defaults={'view_user_name': None}, methods=['GET'])
-@app.route('/api/data/<int:team_number>/<region>/<match_type>/<int:match_number>/<view_user_name>', methods=['GET'])
+@app.route('/api/data/<string:owner_name>/<string:filename>', methods=['GET'])
 @login_required
-def open_data(username, team_number, region, match_type, match_number, view_user_name):
-    if not view_user_name is None:
-        with open(os.path.join(f'./data/raw/{view_user_name}', f'{team_number}_{region}_{match_type}{match_number}.json'), 'r') as f:
-            g_datas[username]._data = json.load(f)
-    else:
-        with open(os.path.join(f'./data/raw/{username}', f'{team_number}_{region}_{match_type}{match_number}.json'), 'r') as f:
-            g_datas[username]._data = json.load(f)
+def open_data(username, owner_name, filename):
+    with open(os.path.join(f'./data/raw/{owner_name}', filename), 'r') as f:
+        g_datas[username]._data = json.load(f)
     return jsonify({
         'code': 200,
         'message': 'Success',
         'data': g_datas[username]._data
         }), 200
 
-@app.route('/api/data/<int:team_number>/<region>/<match_type>/<int:match_number>', methods=['POST'])
+@app.route('/api/data/<string:filename>', methods=['POST'])
 @login_required
-def save_data(username, team_number, region, match_type, match_number):
+def save_data(username, filename):
     users = all_users()
     if not (check_access(users[username].role, 'admin') or username == request.json['info']['recorder']):
         return jsonify({
@@ -82,7 +78,9 @@ def save_data(username, team_number, region, match_type, match_number):
             'message': 'Forbidden'
             }), 403
     g_datas[username]._data = request.json
-    with open(os.path.join(f'./data/raw/{username}', f'{team_number}_{region}_{match_type}{match_number}.json'), 'w') as f:
+    if not filename.endswith('.json'):
+        filename += '.json'
+    with open(os.path.join(f'./data/raw/{request.json["info"]["recorder"]}', filename), 'w') as f:
         json.dump(request.json, f, indent=4)
     return jsonify({
         'code': 200,

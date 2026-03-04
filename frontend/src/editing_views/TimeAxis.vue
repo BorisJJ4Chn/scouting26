@@ -83,7 +83,7 @@ const typeName = (type) => {
         'release_ball': '射球',
         'give_up': '放弃',
         'climb_start': '爬升开始',
-        'climb_end': '爬升结算',
+        'climb_end': '爬升结束',
         'collision': '撞车',
     }
     return chnName[type] || type

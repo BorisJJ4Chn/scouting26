@@ -50,15 +50,17 @@ const handleSave = async () => {
     
     try {
         // 使用已打开的数据构建路径
-        const { team_number, region, match_type, match_number } = store.data?.info || {}
+        const { team_number, region, match_type, match_number, record_date } = store.data?.info || {}
         
         if (!team_number || !region || !match_type || !match_number) {
             error.value = '请先打开数据'
             return
         }
+
+        const filename = `${team_number}_${region}_${match_type[0]}${match_number}${record_date ? `_${record_date}` : ''}.json`
         
         // 调用API
-        const response = await request.post(`/api/data/${team_number}/${region}/${match_type[0]}/${match_number}`, store.data)
+        const response = await request.post(`/api/data/${filename}`, store.data)
         
         if (response.data.code === 200) {
             // 保存成功

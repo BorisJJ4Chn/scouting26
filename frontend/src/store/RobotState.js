@@ -16,7 +16,7 @@ export const useRobotStateStore = defineStore('robot', {
             // AutoState variables
             isInState: true,
             hasBall: false,
-            climbStarted: false,
+            climbStatus: 'before',
             groupClimbPosition: null,
             groupClimbSuccess: null,
             groupMidPosition: null,
@@ -64,20 +64,7 @@ export const useRobotStateStore = defineStore('robot', {
 
                 this.currentState = STATES.AUTO_PAUSE
             } else if (this.currentState === STATES.AUTO_PAUSE && time >= 23.0) {
-                if (this.climbStarted) {
-                    let EngName = {
-                        '左爬': 'left',
-                        '中爬': 'mid',
-                        '右爬': 'right',
-                    }
-                    request.post('/api/climb/auto', {
-                        success: this.groupClimbSuccess.selectedOptions[0] === '成功',
-                        position: EngName[this.groupClimbPosition.selectedOptions[0]],
-                    }).catch((err) => {
-                        console.error(err)
-                    })
-                }
-                this.climbStarted = false
+                this.climbStatus = 'before'
                 this.preLoadEnded = true
                 this.manager.deleteGroupIfExist('groupClimbPosition')
                 this.manager.deleteGroupIfExist('groupClimbSuccess')
@@ -109,23 +96,6 @@ export const useRobotStateStore = defineStore('robot', {
                     this.currentState = STATES.ENDGAME
                 }
             } else if (this.currentState === STATES.ENDGAME && time >= 163.0) {
-                if (this.climbStarted) {
-                    let EngName = {
-                        '左爬': 'left',
-                        '中爬': 'mid',
-                        '右爬': 'right',
-                        '高杆': 'high',
-                        '中杆': 'mid',
-                        '低杆': 'low',
-                    }
-                    request.post('/api/climb/teleop', {
-                        success: this.groupClimbSuccess.selectedOptions[0] === '成功',
-                        position: EngName[this.groupClimbPosition.selectedOptions[0]],
-                        height: EngName[this.groupClimbHeight.selectedOptions[0]],
-                    }).catch((err) => {
-                        console.error(err)
-                    })
-                }
                 let EngName = {
                     '推球回家次数': 'push_home_count',
                     '推球进outpost次数': 'push_outpost_count',
@@ -142,7 +112,14 @@ export const useRobotStateStore = defineStore('robot', {
                     console.error(err)
                 })
 
-                request.post('/api/over', {}).catch((err) => {
+                const date = new Date()
+                const month = (date.getMonth() + 1).toString().padStart(2, '0')
+                const day = date.getDate().toString().padStart(2, '0')
+                const hour = date.getHours().toString().padStart(2, '0')
+                const minute = date.getMinutes().toString().padStart(2, '0')
+                const dateStr = `${month}-${day}-${hour}-${minute}`
+
+                request.post('/api/over', { date: dateStr }).catch((err) => {
                     console.error(err)
                 })
 
@@ -207,9 +184,6 @@ export const useRobotStateStore = defineStore('robot', {
                 this.manager.deselectOptions('groupAccuracy', this.groupAccuracy.selectedOptions.slice())
             }
         },
-        setClimbStarted(value) {
-            this.climbStarted = value
-        },
         updateCurrentState(state) {
             this.currentState = state
         },
@@ -235,7 +209,7 @@ export const useRobotStateStore = defineStore('robot', {
 
             this.isInState = true
             this.hasBall = false
-            this.climbStarted = false
+            this.climbStatus = 'before'
             this.groupClimbPosition = null
             this.groupClimbSuccess = null
             this.groupMidPosition = null

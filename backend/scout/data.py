@@ -26,21 +26,11 @@ class Data:
     def setAutoWinner(self, auto_winner: dict[str, str | int | bool]):
         self._data['behaviors'].update(auto_winner)
 
-    def setClimbStatus(self, climb_status: dict[str, str | int | bool], which: str):
-        for idx, action in reversed(list(enumerate(self._data['behaviors']['actions']))):
-            if action['type'] == 'climb_start':
-                if which == 'auto' and action['timestamp'] <= 23000:
-                    self._data['behaviors']['actions'][idx].update(climb_status)
-                if which == 'teleop' and action['timestamp'] > 23000:
-                    self._data['behaviors']['actions'][idx].update(climb_status)
-                break
-
     def fromCountButton(self, action: dict[str, str | int | bool]):
         self._data['behaviors']['actions'].append(action)
 
     def setMidPosition(self, mid_position: dict[str, str | int | bool]):
         for idx, action in reversed(list(enumerate(self._data['behaviors']['actions']))):
-            print(idx)
             if action['type'] == 'collect_ball':
                 if action['position'] == 'mid':
                     self._data['behaviors']['actions'][idx].update(mid_position)
@@ -50,7 +40,7 @@ class Data:
         self._data['behaviors']['counters'] = counters
 
     def makeFilenameNoExt(self) -> str:
-        return f"{self._data['info']['team_number']}_{self._data['info']['region']}_{self._data['info']['match_type'][0]}{self._data['info']['match_number']}"
+        return f"{self._data['info']['team_number']}_{self._data['info']['region']}_{self._data['info']['match_type'][0]}{self._data['info']['match_number']}{'_' + self._data['info']['record_date'] if self._data['info'].get('record_date') else ''}"
 
     def read(self, filename: str):
         with open(filename, 'r') as f:
@@ -91,16 +81,6 @@ class Data:
                     new_actions.append(last_give_up)
                     last_give_up = None
                 new_actions.append(action)
-                if action['type'] == 'climb_start':
-                    climbs[action['timestamp'] > 23000] = True
-        new_actions.append({
-            'timestamp': 23000,
-            'type': 'climb_end',
-        })
-        new_actions.append({
-            'timestamp': 166000,
-            'type': 'climb_end',
-        })
 
         self._data['behaviors']['actions'] = new_actions
         
