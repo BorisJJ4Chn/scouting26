@@ -16,6 +16,7 @@ const store = useRobotStateStore()
     name="吸中切"
     :style="{ backgroundColor: COLORS.BLUE, ...getButtonPosition('吸中切') }"
     :disabled="!(store.getPreLoadEnded && !store.isInState)"
+    :attachment="{ type: 'collect_ball', position: 'mid', precise: 'mid' }"
   />
   <CountButton 
     name="吸球阵角"

@@ -36,7 +36,7 @@ onMounted(() => {
         <div class="action-item">
             <label class="action-label">位置</label>
             <select class="action-select" v-model="newAction.position">
-                <option value="under_hub">Hub下</option>
+                <option value="below_hub">Hub下</option>
                 <option value="near_line">线后</option>
                 <option value="near_tower">靠塔</option>
                 <option value="other">任意</option>

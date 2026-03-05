@@ -25,23 +25,19 @@ def get_files(username, path):
         new_file_list = []
         for file_dir_name in file_list[:]:
             if os.path.isdir(os.path.join(path, file_dir_name)):
-                to_append = {
+                new_file_list.append({
                     'name': file_dir_name,
                     'type': 'folder',
-                }
-                to_append.update({
+                } | ({
                     'owner': file_dir_name,
-                } if path.startswith('data/raw/') else {})
-                new_file_list.append(to_append)
+                } if path.startswith('data/raw/') else {}))
             else:
-                to_append = {
+                new_file_list.append({
                     'name': file_dir_name,
                     'type': 'file',
-                }
-                to_append.update({
+                } | ({
                     'owner': path.split('/')[-2],
-                } if path.startswith('data/raw/') else {})
-                new_file_list.append(to_append)
+                } if path.startswith('data/raw/') else {}))
         return jsonify({
             'code': 200,
             'message': 'Success',
@@ -62,28 +58,24 @@ def get_files(username, path):
                 visible |= username == file_dir_name
                 visible |= check_access(users[username].role, 'captain')
                 if visible:
-                    to_append = {
+                    new_file_list.append({
                         'name': file_dir_name,
                         'type': 'folder',
-                    }
-                    to_append.update({
+                    } | ({
                         'owner': file_dir_name,
-                    } if path.startswith('data/raw/') else {})
-                    new_file_list.append(to_append)
+                    } if path.startswith('data/raw/') else {}))
             else:
                 visible = users[username].role == 'captain'
                 visible |= path.split('/')[-2] == username
                 visible &= file_dir_name != 'users.json'
                 visible |= users[username].role == 'admin'
                 if visible:
-                    to_append = {
+                    new_file_list.append({
                         'name': file_dir_name,
                         'type': 'file',
-                    }
-                    to_append.update({
+                    } | ({
                         'owner': path.split('/')[-2],
-                    } if path.startswith('data/raw/') else {})
-                    new_file_list.append(to_append)
+                    } if path.startswith('data/raw/') else {}))
 
         return jsonify({
             'code': 200,

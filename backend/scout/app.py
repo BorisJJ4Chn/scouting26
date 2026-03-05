@@ -32,12 +32,13 @@ app.register_blueprint(files_bp, url_prefix='/api')
 @login_required
 def over(username):
 
+    g_datas[username]._data['info']['record_date'] = request.json['date']
+    g_datas[username].after()
+    
     filename = g_datas[username].makeFilenameNoExt() + '.json'
 
     if not os.path.exists(f'./data/raw/{username}'):
         os.makedirs(f'./data/raw/{username}')
-    g_datas[username]._data['info']['record_date'] = request.json['date']
-    g_datas[username].after()
 
     with open(os.path.join(f'./data/raw/{username}', filename), 'w') as f:
         json.dump(g_datas[username]._data, f, indent=4)

@@ -64,8 +64,10 @@ const handleClick = () => {
   }
   buttonRef.value.classList.remove('no-hover')
   setTimeout(() => {
-    buttonRef.value.classList.add('no-hover')
-    buttonRef.value.blur()
+    if (buttonRef.value) {
+      buttonRef.value.classList.add('no-hover')
+      buttonRef.value.blur()
+    }
   }, 300)
   
   // 触发点击事件

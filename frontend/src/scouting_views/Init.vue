@@ -46,6 +46,7 @@ const PostInit = async () => {
       >
         <option disabled selected hidden value="">请选择赛区</option>
         <option class="region-option" value="RPH">RPH</option>
+        <option class="region-option" value="Northern Lights">Northern Lights</option>
       </select>
     </div>
     <div class="team-input">

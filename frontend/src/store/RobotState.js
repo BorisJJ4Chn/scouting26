@@ -19,7 +19,6 @@ export const useRobotStateStore = defineStore('robot', {
             climbStatus: 'before',
             groupClimbPosition: null,
             groupClimbSuccess: null,
-            groupMidPosition: null,
             groupPreload: null,
 
             winner: null,
@@ -52,9 +51,9 @@ export const useRobotStateStore = defineStore('robot', {
                 this.currentState = STATES.AUTO
             } else if (this.currentState === STATES.AUTO && time >= 20.0) {
                 let EngName = {
-                    'Preload全进': 'all',
-                    'Preload射丢': 'some',
-                    'Preload没射': 'nope',
+                    'PreLoad全进': 'all',
+                    'PreLoad射丢': 'some',
+                    'PreLoad没射': 'nope',
                 }
                 request.post('/api/preload', {
                     preload: EngName[this.groupPreload.selectedOptions[0]],
@@ -131,7 +130,6 @@ export const useRobotStateStore = defineStore('robot', {
         createOptionButtonGroups() {
             this.groupClimbPosition = this.manager.createGroupIfNotExist('groupClimbPosition', 1)
             this.groupClimbSuccess = this.manager.createGroupIfNotExist('groupClimbSuccess', 1)
-            this.groupMidPosition = this.manager.createGroupIfNotExist('groupMidPosition', 1)
             this.groupPreload = this.manager.createGroupIfNotExist('groupPreload', 1)
             this.groupActive = this.manager.createGroupIfNotExist('groupActive', 2)
             this.groupAccuracy = this.manager.createGroupIfNotExist('groupAccuracy', 1)
@@ -152,27 +150,6 @@ export const useRobotStateStore = defineStore('robot', {
         // AutoState actions
         setIsInState(value) {
             this.isInState = value
-            if (this.isInState) {
-                if (this.currentState === STATES.AUTO && this.groupMidPosition.selected()) {
-                    let EngName = {
-                        '中切': 'mid',
-                        '边切': 'edge',
-                        '球阵角': 'corner',
-                    }
-                    request.patch('/api/mid-position', {
-                        precise: EngName[this.groupMidPosition.selectedOptions[0]],
-                    }).catch((err) => {
-                        console.error(err)
-                    })
-                }
-                this.manager.deselectOptions('groupMidPosition', this.groupMidPosition.selectedOptions.slice())
-            }
-            else {
-                this.fromMid = false
-            }
-        },
-        setFromMid(value) {
-            this.fromMid = value
         },
         increaseOutCount() {
             this.outCount++
@@ -212,7 +189,6 @@ export const useRobotStateStore = defineStore('robot', {
             this.climbStatus = 'before'
             this.groupClimbPosition = null
             this.groupClimbSuccess = null
-            this.groupMidPosition = null
             this.groupPreload = null
 
             this.winner = null

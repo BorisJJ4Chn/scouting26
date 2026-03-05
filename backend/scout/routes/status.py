@@ -52,21 +52,6 @@ def auto_winner(username):
         'message': 'Success'
         }), 200
 
-@status_bp.route('/mid-position', methods=['PATCH'])
-@login_required
-def status_mid_position(username):
-    """
-    字段:
-        - precise: 中场位置
-    """
-    data: dict[str, str | int | bool] = request.get_json()
-    g_datas[username].setMidPosition(data)
-
-    return jsonify({
-        'code': 200,
-        'message': 'Success'
-        }), 200
-
 @status_bp.route('/counters', methods=['POST'])
 @login_required
 def status_counters(username):
