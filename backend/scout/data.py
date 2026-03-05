@@ -49,43 +49,6 @@ class Data:
     def after(self):
         self._data['behaviors']['actions'].sort(key=lambda x: x['timestamp'])
 
-        shifts = [True] * 4
-        if self._data['behaviors']['auto_winner'] == 'red':
-            shifts[0] = False
-            shifts[2] = False
-        else:
-            shifts[1] = False
-            shifts[3] = False
-        for action in reversed(self._data['behaviors']['actions']):
-            for i in range(4):
-                if shifts[i] and 55000 + i * 25000 < action['timestamp'] <= 58000 + i * 25000:
-                    shifts[i] = False
-                    action['timestamp'] = 58000 + i * 25000
-                    break
-        for i in range(4):
-            if shifts[i]:
-                self._data['behaviors']['actions'].append({
-                    'timestamp': 55000 + i * 25000,
-                    'type': 'give_up',
-                })
-
-        last_give_up = None
-        new_actions = []
-        climbs = [False, False]
-        for action in self._data['behaviors']['actions']:
-            if action['type'] == 'give_up':
-                last_give_up = action
-                self._data['behaviors']['actions'].remove(action)
-            else:
-                if last_give_up:
-                    new_actions.append(last_give_up)
-                    last_give_up = None
-                new_actions.append(action)
-
-        self._data['behaviors']['actions'] = new_actions
-        
-        self._data['behaviors']['actions'].sort(key=lambda x: x['timestamp'])
-
         print(self._data)
 
 g_datas = dict()
